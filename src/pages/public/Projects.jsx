@@ -77,7 +77,7 @@ export default function Projects() {
                 const titulo = m.titulo;
                 const focus = m.descricao || m.categoria?.nome || "";
                 const region = PROJECT_REGION[titulo] || "Ipojuca · PE";
-                const image = PHOTO_BY_ID[titulo];
+                const image = m.imagem || PHOTO_BY_ID[titulo];
                 const raised = Number(m.valor_atual || 0);
                 const goal = Number(m.valor_alvo || 0);
                 return (

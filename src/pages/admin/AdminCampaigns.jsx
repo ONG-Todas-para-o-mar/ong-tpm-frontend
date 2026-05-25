@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -12,6 +12,8 @@ import {
   useCreateMeta,
   useUpdateMeta,
 } from "../../hooks/useQueries.js";
+
+const MAX_IMG_MB = 5;
 
 const schema = z.object({
   titulo: z.string().min(3, "Mínimo 3 caracteres"),
@@ -33,6 +35,9 @@ function isAuthMissing(err) {
 export default function AdminCampaigns() {
   const [filter, setFilter] = useState("");
   const [submitError, setSubmitError] = useState(null);
+  const [imagem, setImagem] = useState(null);
+  const [imagemPreview, setImagemPreview] = useState(null);
+  const fileRef = useRef(null);
 
   const { data: metas, isLoading, isError, error, refetch } = useMetas();
   const { data: categorias } = useCategorias();
@@ -61,18 +66,43 @@ export default function AdminCampaigns() {
     return true;
   });
 
+  const onPickImagem = (e) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    if (!f.type.startsWith("image/")) {
+      setSubmitError("Arquivo precisa ser uma imagem (jpg, png, webp).");
+      return;
+    }
+    if (f.size > MAX_IMG_MB * 1024 * 1024) {
+      setSubmitError(`Imagem muito grande. Máximo ${MAX_IMG_MB}MB.`);
+      return;
+    }
+    setSubmitError(null);
+    setImagem(f);
+    setImagemPreview(URL.createObjectURL(f));
+  };
+
+  const clearImagem = () => {
+    setImagem(null);
+    if (imagemPreview) URL.revokeObjectURL(imagemPreview);
+    setImagemPreview(null);
+    if (fileRef.current) fileRef.current.value = "";
+  };
+
   const onSubmit = async (data) => {
     setSubmitError(null);
     try {
-      const payload = {
-        titulo: data.titulo,
-        descricao: data.descricao || "",
-        categoria_id: data.categoria_id,
-        valor_alvo: data.valor_alvo,
-      };
-      if (data.prazo) payload.prazo = data.prazo;
-      await create.mutateAsync(payload);
+      const fd = new FormData();
+      fd.append("titulo", data.titulo);
+      fd.append("descricao", data.descricao || "");
+      fd.append("categoria_id", data.categoria_id);
+      fd.append("valor_alvo", data.valor_alvo);
+      fd.append("ativa", "true");
+      if (data.prazo) fd.append("prazo", data.prazo);
+      if (imagem) fd.append("imagem", imagem);
+      await create.mutateAsync(fd);
       reset();
+      clearImagem();
     } catch (err) {
       if (isAuthMissing(err)) {
         setSubmitError(
@@ -194,6 +224,48 @@ export default function AdminCampaigns() {
               </div>
             </div>
 
+            <div>
+              <label className="label" htmlFor="imagem">Foto da campanha (opcional)</label>
+              {imagemPreview ? (
+                <div className="row gap-12" style={{ alignItems: "center" }}>
+                  <img
+                    src={imagemPreview}
+                    alt="Pré-visualização"
+                    style={{
+                      width: 96,
+                      height: 96,
+                      objectFit: "cover",
+                      borderRadius: 8,
+                      border: "1px solid var(--line)",
+                    }}
+                  />
+                  <div style={{ fontSize: 12, color: "var(--ink-3)" }}>
+                    {imagem?.name} · {(imagem.size / 1024).toFixed(0)} KB
+                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-ghost btn-sm"
+                    onClick={clearImagem}
+                  >
+                    Remover
+                  </button>
+                </div>
+              ) : (
+                <input
+                  id="imagem"
+                  ref={fileRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  className="input"
+                  onChange={onPickImagem}
+                  style={{ padding: 8 }}
+                />
+              )}
+              <div style={{ fontSize: 11, color: "var(--ink-3)", marginTop: 4 }}>
+                PNG, JPG ou WEBP. Máximo {MAX_IMG_MB}MB.
+              </div>
+            </div>
+
             {submitError && <div className="field-error" role="alert">{submitError}</div>}
 
             <button
@@ -281,7 +353,36 @@ export default function AdminCampaigns() {
                           i === visible.length - 1 ? "none" : "1px solid var(--line)",
                       }}
                     >
-                      <td style={{ padding: "14px 16px", fontWeight: 600 }}>{m.titulo}</td>
+                      <td style={{ padding: "14px 16px" }}>
+                        <div className="row gap-12" style={{ alignItems: "center" }}>
+                          {m.imagem ? (
+                            <img
+                              src={m.imagem}
+                              alt=""
+                              style={{
+                                width: 44,
+                                height: 44,
+                                objectFit: "cover",
+                                borderRadius: 6,
+                                border: "1px solid var(--line)",
+                                flexShrink: 0,
+                              }}
+                            />
+                          ) : (
+                            <div
+                              style={{
+                                width: 44,
+                                height: 44,
+                                background: "var(--bg-2)",
+                                borderRadius: 6,
+                                border: "1px solid var(--line)",
+                                flexShrink: 0,
+                              }}
+                            />
+                          )}
+                          <span style={{ fontWeight: 600 }}>{m.titulo}</span>
+                        </div>
+                      </td>
                       <td style={{ padding: "14px 16px" }}>
                         <span className="tag" style={{ fontSize: 10 }}>
                           {m.categoria?.nome || "—"}
