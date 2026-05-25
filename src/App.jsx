@@ -14,6 +14,7 @@ import Signup from "./pages/auth/Signup.jsx";
 
 import Dashboard from "./pages/admin/Dashboard.jsx";
 import AdminRanking from "./pages/admin/AdminRanking.jsx";
+import AdminCampaigns from "./pages/admin/AdminCampaigns.jsx";
 
 import { useAuth } from "./hooks/useAuth.jsx";
 
@@ -50,6 +51,14 @@ export default function App() {
           element={
             <RequireAdmin>
               <AdminRanking />
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="admin/campanhas"
+          element={
+            <RequireAdmin>
+              <AdminCampaigns />
             </RequireAdmin>
           }
         />

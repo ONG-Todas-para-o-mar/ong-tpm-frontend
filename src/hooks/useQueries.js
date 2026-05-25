@@ -52,3 +52,41 @@ export const useRegister = () =>
   useMutation({
     mutationFn: (payload) => api.post("/auth/register/", payload).then((r) => r.data),
   });
+
+export const useCampaigns = (status) =>
+  useQuery({
+    queryKey: ["campaigns", status || "all"],
+    queryFn: () =>
+      api.get("/campaigns", { params: status ? { status } : {} }).then((r) => r.data),
+  });
+
+export const useCampaign = (id) =>
+  useQuery({
+    queryKey: ["campaigns", id],
+    queryFn: () => api.get(`/campaigns/${id}`).then((r) => r.data),
+    enabled: !!id,
+  });
+
+export const useCreateCampaign = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (payload) => api.post("/campaigns", payload).then((r) => r.data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["campaigns"] }),
+  });
+};
+
+export const useArchiveCampaign = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => api.post(`/campaigns/${id}/archive`).then((r) => r.data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["campaigns"] }),
+  });
+};
+
+export const useReactivateCampaign = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => api.post(`/campaigns/${id}/reactivate`).then((r) => r.data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["campaigns"] }),
+  });
+};

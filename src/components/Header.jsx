@@ -15,6 +15,7 @@ const NAV_PUBLIC = [
 
 const NAV_ADMIN = [
   { to: "/admin", label: "Dashboard", end: true },
+  { to: "/admin/campanhas", label: "Campanhas" },
   { to: "/admin/ranking", label: "Ranking" },
 ];
 

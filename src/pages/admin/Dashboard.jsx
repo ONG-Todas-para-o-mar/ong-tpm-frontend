@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import Icon from "../../components/Icon.jsx";
 import { Progress } from "../../components/Shared.jsx";
 import { Sparkline, BarChart, AdminLayout } from "../../components/Charts.jsx";
@@ -91,9 +92,9 @@ export default function Dashboard() {
           <button className="btn btn-secondary btn-sm">
             <Icon name="upload" size={14} /> Exportar
           </button>
-          <button className="btn btn-primary btn-sm">
+          <Link to="/admin/campanhas" className="btn btn-primary btn-sm">
             <Icon name="plus" size={14} /> Nova campanha
-          </button>
+          </Link>
         </div>
       </div>
 
