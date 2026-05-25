@@ -11,6 +11,24 @@ const PHOTO = (n) => `/assets/photos/DSC_0${n}.webp`;
 
 export const TPM_ABOUT_IMAGE = PHOTO("387");
 
+export const PHOTO_BY_ID = {
+  "Surf na Baía": PHOTO("266"),
+  "Mulheres do Mar": PHOTO("270"),
+  "Onda Antirracista": PHOTO("274"),
+  "Mães da Maré": PHOTO("278"),
+  "Pequenas Surfistas": PHOTO("282"),
+  "Bem-Viver Costeiro": PHOTO("286"),
+};
+
+export const PROJECT_REGION = {
+  "Surf na Baía": "Maracaípe · PE",
+  "Mulheres do Mar": "Porto de Galinhas · PE",
+  "Onda Antirracista": "Maracaípe · PE",
+  "Mães da Maré": "Ipojuca · PE",
+  "Pequenas Surfistas": "Maracaípe · PE",
+  "Bem-Viver Costeiro": "Litoral Sul · PE",
+};
+
 export const TPM_PROJECTS = [
   {
     id: "p1",
