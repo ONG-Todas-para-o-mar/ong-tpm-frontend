@@ -53,40 +53,40 @@ export const useRegister = () =>
     mutationFn: (payload) => api.post("/auth/register/", payload).then((r) => r.data),
   });
 
-export const useCampaigns = (status) =>
+export const useCategorias = () =>
   useQuery({
-    queryKey: ["campaigns", status || "all"],
-    queryFn: () =>
-      api.get("/campaigns", { params: status ? { status } : {} }).then((r) => r.data),
+    queryKey: ["categorias"],
+    queryFn: () => api.get("/categorias/").then((r) => r.data.results || r.data),
+    staleTime: 5 * 60_000,
   });
 
-export const useCampaign = (id) =>
-  useQuery({
-    queryKey: ["campaigns", id],
-    queryFn: () => api.get(`/campaigns/${id}`).then((r) => r.data),
-    enabled: !!id,
-  });
-
-export const useCreateCampaign = () => {
+export const useCreateMeta = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (payload) => api.post("/campaigns", payload).then((r) => r.data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["campaigns"] }),
+    mutationFn: (payload) => api.post("/metas/", payload).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["metas"] });
+      qc.invalidateQueries({ queryKey: ["dashboard"] });
+    },
   });
 };
 
-export const useArchiveCampaign = () => {
+export const useUpdateMeta = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (id) => api.post(`/campaigns/${id}/archive`).then((r) => r.data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["campaigns"] }),
+    mutationFn: ({ id, ...payload }) =>
+      api.patch(`/metas/${id}/`, payload).then((r) => r.data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["metas"] });
+      qc.invalidateQueries({ queryKey: ["dashboard"] });
+    },
   });
 };
 
-export const useReactivateCampaign = () => {
+export const useDeleteMeta = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (id) => api.post(`/campaigns/${id}/reactivate`).then((r) => r.data),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["campaigns"] }),
+    mutationFn: (id) => api.delete(`/metas/${id}/`).then((r) => r.data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["metas"] }),
   });
 };
