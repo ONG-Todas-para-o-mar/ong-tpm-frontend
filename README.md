@@ -213,8 +213,25 @@ para qualquer caminho — os dois arquivos de configuração já vêm prontos:
 | `public/_redirects` | Netlify · Cloudflare Pages |
 | `vercel.json` | Vercel (rewrites + cache longo em `/assets`) |
 
-Antes de publicar, defina `VITE_API_URL` com a URL pública da API (a variável é lida
-em tempo de build) e libere esse domínio no `CORS_ALLOWED_ORIGINS` do backend.
+### Mesmo domínio que a API (arranjo em produção)
+
+Em produção o Nginx serve este build e faz proxy de `/api` para o Django no **mesmo
+domínio**, então o `.env.production` do repositório já traz:
+
+```
+VITE_API_URL=/api
+```
+
+Com isso não existe CORS entre front e API, e `npm run build` no servidor sai pronto.
+O passo a passo completo está em
+[`DEPLOY.md`](https://github.com/ONG-Todas-para-o-mar/ong-tpm-backend/blob/main/DEPLOY.md)
+no repositório do backend.
+
+### Domínios separados
+
+Se um dia o frontend for para outro host (Cloudflare Pages, Vercel), troque
+`VITE_API_URL` pela URL pública da API — a variável é lida em tempo de build — e
+inclua o domínio do site em `CORS_ALLOWED_ORIGINS` no backend.
 
 ---
 
