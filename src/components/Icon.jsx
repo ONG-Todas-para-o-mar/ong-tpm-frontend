@@ -192,6 +192,88 @@ const PATHS = {
       <path d="M12 13v4" />
     </>
   ),
+  menu: (
+    <>
+      <path d="M3 6h18" />
+      <path d="M3 12h18" />
+      <path d="M3 18h18" />
+    </>
+  ),
+  close: (
+    <>
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    </>
+  ),
+  edit: (
+    <>
+      <path d="M12 20h9" />
+      <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+    </>
+  ),
+  trash: (
+    <>
+      <path d="M3 6h18" />
+      <path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2" />
+      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+      <path d="M10 11v6M14 11v6" />
+    </>
+  ),
+  calendar: (
+    <>
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <path d="M3 10h18" />
+      <path d="M8 3v4M16 3v4" />
+    </>
+  ),
+  send: (
+    <>
+      <path d="M22 2 11 13" />
+      <path d="M22 2 15 22l-4-9-9-4Z" />
+    </>
+  ),
+  download: (
+    <>
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <path d="m7 10 5 5 5-5" />
+      <path d="M12 15V3" />
+    </>
+  ),
+  shell: (
+    <>
+      <path d="M12 21c-5 0-9-4.5-9-9a9 9 0 0 1 18 0c0 4.5-4 9-9 9Z" />
+      <path d="M12 21V3" />
+      <path d="M12 21c-2.5-3-4-6-4-9M12 21c2.5-3 4-6 4-9" />
+    </>
+  ),
+  wing: (
+    <>
+      <path d="M3 18c6 0 10-3 13-9" />
+      <path d="M6 18c5 0 8-2.5 10-7" />
+      <path d="M10 18c3.5 0 5.5-1.5 7-5" />
+    </>
+  ),
+  star: <path d="m12 3 2.7 5.6 6.3.9-4.5 4.3 1 6.2-5.5-3-5.5 3 1-6.2L3 9.5l6.3-.9Z" />,
+  globe: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18" />
+      <path d="M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18Z" />
+    </>
+  ),
+  inbox: (
+    <>
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <path d="M3 13h5l1.5 2.5h5L16 13h5" />
+    </>
+  ),
+  news: (
+    <>
+      <path d="M4 5h12a1 1 0 0 1 1 1v13H5a1 1 0 0 1-1-1Z" />
+      <path d="M17 8h2a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-2" />
+      <path d="M7 9h6M7 13h6M7 17h4" />
+    </>
+  ),
 };
 
 export default function Icon({ name, size = 18, stroke = 1.6, ...rest }) {

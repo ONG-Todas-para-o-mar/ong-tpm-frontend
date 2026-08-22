@@ -3,14 +3,23 @@ import { authStorage, setUnauthorizedHandler } from "../lib/api.js";
 
 const AuthContext = createContext(null);
 
+const deslogado = {
+  isAuthed: false,
+  isAdmin: false,
+  user: null,
+  accessToken: null,
+  refreshToken: null,
+};
+
 const initial = () => {
   const persisted = authStorage.read();
-  if (!persisted) return { isAuthed: false, isAdmin: false, user: null, accessToken: null };
+  if (!persisted?.accessToken) return deslogado;
   return {
     isAuthed: true,
-    isAdmin: !!persisted.isAdmin,
+    isAdmin: !!persisted.user?.is_admin_ong,
     user: persisted.user || null,
-    accessToken: persisted.accessToken || null,
+    accessToken: persisted.accessToken,
+    refreshToken: persisted.refreshToken || null,
   };
 };
 
@@ -18,24 +27,37 @@ export function AuthProvider({ children }) {
   const [state, setState] = useState(initial);
 
   useEffect(() => {
-    setUnauthorizedHandler(() => {
-      setState({ isAuthed: false, isAdmin: false, user: null, accessToken: null });
-    });
+    setUnauthorizedHandler(() => setState(deslogado));
   }, []);
 
-  const login = ({ asAdmin = false, user = null, accessToken = null } = {}) => {
-    const next = { isAuthed: true, isAdmin: !!asAdmin, user, accessToken };
+  const login = ({ user = null, accessToken = null, refreshToken = null } = {}) => {
+    const next = {
+      isAuthed: true,
+      isAdmin: !!user?.is_admin_ong,
+      user,
+      accessToken,
+      refreshToken,
+    };
     authStorage.write(next);
     setState(next);
+    return next;
+  };
+
+  const updateUser = (user) => {
+    setState((prev) => {
+      const next = { ...prev, user, isAdmin: !!user?.is_admin_ong };
+      authStorage.write(next);
+      return next;
+    });
   };
 
   const logout = () => {
     authStorage.clear();
-    setState({ isAuthed: false, isAdmin: false, user: null, accessToken: null });
+    setState(deslogado);
   };
 
   return (
-    <AuthContext.Provider value={{ ...state, login, logout }}>
+    <AuthContext.Provider value={{ ...state, login, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

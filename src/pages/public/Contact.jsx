@@ -4,39 +4,56 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Icon from "../../components/Icon.jsx";
 import SEO from "../../components/SEO.jsx";
-import { PH, Spinner } from "../../components/Shared.jsx";
+import { PH, Notice, Spinner } from "../../components/Shared.jsx";
+import { mensagemDeErro } from "../../lib/api.js";
+import { useEnviarMensagem } from "../../hooks/useQueries.js";
+
+const ASSUNTOS = [
+  { id: "voluntariado", label: "Quero ser voluntário(a)" },
+  { id: "parceria", label: "Parceria institucional" },
+  { id: "imprensa", label: "Imprensa" },
+  { id: "doacoes", label: "Dúvidas sobre doações" },
+  { id: "outro", label: "Outro" },
+];
 
 const schema = z.object({
-  name: z.string().min(2, "Informe seu nome"),
-  organization: z.string().optional(),
+  nome: z.string().min(2, "Informe seu nome"),
+  organizacao: z.string().optional(),
   email: z.string().email("E-mail inválido"),
-  subject: z.string().min(1, "Selecione um assunto"),
-  message: z.string().min(10, "Mensagem muito curta"),
+  assunto: z.string().min(1, "Selecione um assunto"),
+  mensagem: z.string().min(10, "Mensagem muito curta"),
 });
 
 export default function Contact() {
-  const [sent, setSent] = useState(false);
+  const [enviada, setEnviada] = useState(false);
+  const [erro, setErro] = useState(null);
+  const enviar = useEnviarMensagem();
+
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: "",
-      organization: "",
+      nome: "",
+      organizacao: "",
       email: "",
-      subject: "Quero ser voluntário(a)",
-      message: "",
+      assunto: "voluntariado",
+      mensagem: "",
     },
   });
 
-  const onSubmit = async () => {
-    // Future: await api.post('/contact', data)
-    setSent(true);
-    reset();
-    setTimeout(() => setSent(false), 5000);
+  const onSubmit = async (data) => {
+    setErro(null);
+    try {
+      await enviar.mutateAsync(data);
+      setEnviada(true);
+      reset();
+    } catch (err) {
+      setErro(mensagemDeErro(err, "Não foi possível enviar a mensagem."));
+    }
   };
 
   return (
@@ -45,40 +62,49 @@ export default function Contact() {
       <section style={{ padding: "64px 0 32px", borderBottom: "1px solid var(--line)" }}>
         <div className="wrap">
           <span className="eyebrow">Contato</span>
-          <h1 className="display" style={{ fontSize: "clamp(40px, 5vw, 72px)", margin: "18px 0 0" }}>
+          <h1 className="display" style={{ fontSize: "clamp(34px, 5vw, 72px)", margin: "18px 0 0" }}>
             Fale com a TPM.
           </h1>
         </div>
       </section>
 
       <section style={{ padding: "48px 0 96px" }}>
-        <div className="wrap" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64 }}>
+        <div className="wrap g2" style={{ gap: 64 }}>
           <form className="card" style={{ padding: 36 }} onSubmit={handleSubmit(onSubmit)} noValidate>
             <span className="eyebrow">Envie uma mensagem</span>
             <div style={{ display: "grid", gap: 16, marginTop: 18 }}>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 <div>
-                  <label className="label">Nome</label>
+                  <label className="label" htmlFor="nome">
+                    Nome
+                  </label>
                   <input
-                    className={"input" + (errors.name ? " error" : "")}
+                    id="nome"
+                    className={"input" + (errors.nome ? " error" : "")}
                     placeholder="Como podemos chamar você"
                     autoComplete="name"
-                    {...register("name")}
+                    {...register("nome")}
                   />
-                  {errors.name && <div className="field-error">{errors.name.message}</div>}
+                  {errors.nome && <div className="field-error">{errors.nome.message}</div>}
                 </div>
                 <div>
-                  <label className="label">Organização (opcional)</label>
+                  <label className="label" htmlFor="organizacao">
+                    Organização (opcional)
+                  </label>
                   <input
+                    id="organizacao"
                     className="input"
                     placeholder="Empresa, coletivo, ONG…"
-                    {...register("organization")}
+                    {...register("organizacao")}
                   />
                 </div>
               </div>
               <div>
-                <label className="label">E-mail</label>
+                <label className="label" htmlFor="email">
+                  E-mail
+                </label>
                 <input
+                  id="email"
                   className={"input" + (errors.email ? " error" : "")}
                   type="email"
                   placeholder="voce@email.com"
@@ -88,43 +114,60 @@ export default function Contact() {
                 {errors.email && <div className="field-error">{errors.email.message}</div>}
               </div>
               <div>
-                <label className="label">Assunto</label>
-                <select className="select" {...register("subject")}>
-                  <option>Quero ser voluntário(a)</option>
-                  <option>Parceria institucional</option>
-                  <option>Imprensa</option>
-                  <option>Dúvidas sobre doações</option>
-                  <option>Outro</option>
+                <label className="label" htmlFor="assunto">
+                  Assunto
+                </label>
+                <select id="assunto" className="select" {...register("assunto")}>
+                  {ASSUNTOS.map((a) => (
+                    <option key={a.id} value={a.id}>
+                      {a.label}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div>
-                <label className="label">Mensagem</label>
+                <label className="label" htmlFor="mensagem">
+                  Mensagem
+                </label>
                 <textarea
-                  className={"textarea" + (errors.message ? " error" : "")}
+                  id="mensagem"
+                  className={"textarea" + (errors.mensagem ? " error" : "")}
                   rows={5}
                   placeholder="Conte um pouco sobre o que procura…"
-                  {...register("message")}
+                  {...register("mensagem")}
                 />
-                {errors.message && <div className="field-error">{errors.message.message}</div>}
+                {errors.mensagem && <div className="field-error">{errors.mensagem.message}</div>}
               </div>
             </div>
-            {sent && (
-              <div
-                role="status"
-                style={{
-                  marginTop: 20,
-                  padding: "12px 14px",
-                  background: "var(--red-soft)",
-                  color: "var(--red-ink)",
-                  borderRadius: "var(--r-sm)",
-                  fontSize: 13,
-                }}
-              >
-                Mensagem enviada. Em breve responderemos.
+
+            {enviada && (
+              <div style={{ marginTop: 20 }}>
+                <Notice tone="sucesso" onDismiss={() => setEnviada(false)}>
+                  Mensagem enviada. A equipe responde no e-mail informado.
+                </Notice>
               </div>
             )}
-            <button className="btn btn-primary" type="submit" disabled={isSubmitting} style={{ marginTop: 24 }}>
-              {isSubmitting ? <><Spinner size={14} /> Enviando…</> : <>Enviar mensagem <Icon name="arrow" size={14} /></>}
+            {erro && (
+              <div style={{ marginTop: 20 }}>
+                <Notice tone="erro">{erro}</Notice>
+              </div>
+            )}
+
+            <button
+              className="btn btn-primary"
+              type="submit"
+              disabled={enviar.isPending}
+              style={{ marginTop: 24 }}
+            >
+              {enviar.isPending ? (
+                <>
+                  <Spinner size={14} /> Enviando…
+                </>
+              ) : (
+                <>
+                  Enviar mensagem <Icon name="send" size={14} />
+                </>
+              )}
             </button>
           </form>
 
@@ -141,29 +184,34 @@ export default function Contact() {
               </div>
               <hr className="divider" style={{ margin: "20px 0" }} />
               <div className="col gap-12">
-                <div className="row gap-12">
-                  <Icon name="mail" size={16} />{" "}
+                <a className="row gap-12" href="mailto:hello@tpmar.org">
+                  <Icon name="mail" size={16} />
                   <span className="mono" style={{ fontSize: 13 }}>
                     hello@tpmar.org
                   </span>
-                </div>
+                </a>
                 <div className="row gap-12">
-                  <Icon name="phone" size={16} />{" "}
+                  <Icon name="phone" size={16} />
                   <span className="mono" style={{ fontSize: 13 }}>
                     +55 (81) 3000-0000
                   </span>
                 </div>
-                <div className="row gap-12">
-                  <Icon name="instagram" size={16} />{" "}
+                <a
+                  className="row gap-12"
+                  href="https://instagram.com/tpm.todasparaomar"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  <Icon name="instagram" size={16} />
                   <span className="mono" style={{ fontSize: 13 }}>
                     @tpm.todasparaomar
                   </span>
-                </div>
+                </a>
               </div>
             </div>
 
             <div className="card" style={{ padding: 0, overflow: "hidden" }}>
-              <PH label="mapa — Mucuripe, Fortaleza" ratio="16/9" style={{ borderRadius: 0 }} />
+              <PH label="mapa — Baía de Maracaípe, Ipojuca · PE" ratio="16/9" style={{ borderRadius: 0 }} />
             </div>
 
             <div className="card" style={{ padding: 28 }}>
@@ -173,7 +221,7 @@ export default function Contact() {
               </div>
               <p style={{ color: "var(--ink-3)", fontSize: 13, margin: 0, lineHeight: 1.55 }}>
                 Empresas com matching de doações ou patrocínio direto de projetos falam com o time de
-                relações institucionais em até 48h.
+                relações institucionais. Parceiras recebem o selo institucional na página de sócios.
               </p>
             </div>
           </aside>

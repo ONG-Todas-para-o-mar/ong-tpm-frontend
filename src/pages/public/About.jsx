@@ -1,6 +1,6 @@
 import { PH } from "../../components/Shared.jsx";
 import SEO from "../../components/SEO.jsx";
-import { TPM_ABOUT_IMAGE } from "../../data/mock.js";
+import { FOTO_SOBRE } from "../../data/fotos.js";
 
 export default function About() {
   return (
@@ -17,7 +17,7 @@ export default function About() {
       </section>
 
       <section style={{ padding: "64px 0" }}>
-        <div className="wrap" style={{ display: "grid", gridTemplateColumns: "1fr 1.4fr", gap: 80, alignItems: "start" }}>
+        <div className="wrap" style={{ display: "grid", gridTemplateColumns: "1fr 1.4fr", gap: 64, alignItems: "start" }}>
           <div>
             <span className="eyebrow">Nossa história</span>
             <p style={{ fontSize: 16, color: "var(--ink-2)", marginTop: 16, lineHeight: 1.65 }}>
@@ -33,7 +33,7 @@ export default function About() {
               compromisso com os ODS 5, 10 e 16 da ONU.
             </p>
           </div>
-          <PH label="foto — equipe & beneficiárias" src={TPM_ABOUT_IMAGE} ratio="4/3" />
+          <PH label="foto — equipe & beneficiárias" src={FOTO_SOBRE} ratio="4/3" />
         </div>
       </section>
 
@@ -80,7 +80,7 @@ export default function About() {
                 { y: "2021", t: "Consolidação como ONG", d: "Estatuto registrado e formalização da atuação feminista e antirracista." },
                 { y: "2023", t: "Expansão para empreendedorismo", d: "Programas de geração de renda para mulheres negras chefes de família." },
                 { y: "2025", t: "Plataforma digital", d: "Doações diretas e dashboard público de prestação de contas." },
-                { y: "2026", t: "Gamificação e ranking", d: "Reconhecimento público de doadores recorrentes e empresas parceiras." },
+                { y: "2026", t: "Selos de sócio e ranking", d: "Reconhecimento público de doadores recorrentes e empresas parceiras." },
               ].map((e, i, arr) => (
                 <div
                   key={e.y}

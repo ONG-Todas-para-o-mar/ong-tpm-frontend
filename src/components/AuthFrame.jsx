@@ -2,36 +2,21 @@ import Icon from "./Icon.jsx";
 
 export default function AuthFrame({ title, eyebrow, children, side }) {
   return (
-    <div
-      style={{
-        minHeight: "calc(100vh - 68px)",
-        display: "grid",
-        gridTemplateColumns: "1fr 1.1fr",
-        background: "var(--bg)",
-      }}
-      data-screen-label={"Auth — " + eyebrow}
-    >
-      <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", padding: "64px 64px" }}>
+    <div className="auth-frame" data-screen-label={"Auth — " + eyebrow}>
+      <div className="auth-form">
         <div style={{ maxWidth: 420, width: "100%", margin: "0 auto" }}>
           <span className="eyebrow">{eyebrow}</span>
-          <h1 className="display" style={{ fontSize: "clamp(32px, 3.6vw, 48px)", margin: "16px 0 32px" }}>
+          <h1
+            className="display"
+            style={{ fontSize: "clamp(28px, 3.6vw, 48px)", margin: "16px 0 32px" }}
+          >
             {title}
           </h1>
           {children}
         </div>
       </div>
 
-      <div
-        className="red-block"
-        style={{
-          position: "relative",
-          overflow: "hidden",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          padding: "56px 64px",
-        }}
-      >
+      <div className="auth-side red-block">
         <div className="row gap-8" style={{ color: "rgba(255,255,255,0.7)" }}>
           <Icon name="waveDouble" size={16} />
           <span
@@ -45,6 +30,7 @@ export default function AuthFrame({ title, eyebrow, children, side }) {
         {side}
 
         <div
+          aria-hidden
           style={{
             position: "absolute",
             inset: 0,

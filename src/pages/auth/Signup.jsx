@@ -5,9 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Icon from "../../components/Icon.jsx";
 import AuthFrame from "../../components/AuthFrame.jsx";
-import { Spinner } from "../../components/Shared.jsx";
+import { Notice, Spinner } from "../../components/Shared.jsx";
 import SEO from "../../components/SEO.jsx";
-import { api } from "../../lib/api.js";
+import { api, mensagemDeErro } from "../../lib/api.js";
 import { useAuth } from "../../hooks/useAuth.jsx";
 
 const STEPS = [
@@ -16,7 +16,7 @@ const STEPS = [
   { n: 3, t: "Segurança" },
 ];
 
-const UFS = ["CE", "SC", "BA", "PE", "RJ", "ES", "SP", "RS", "PR", "MG", "DF"];
+const UFS = ["PE", "AL", "BA", "SE", "PB", "RN", "CE", "SP", "RJ", "MG", "ES", "PR", "SC", "RS", "DF"];
 
 const schema = z
   .object({
@@ -47,6 +47,7 @@ export default function Signup() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [step, setStep] = useState(1);
+  const [erro, setErro] = useState(null);
 
   const {
     register,
@@ -77,12 +78,19 @@ export default function Signup() {
   };
 
   const onSubmit = async (data) => {
+    setErro(null);
     try {
       await api.post("/auth/register/", {
         email: data.email,
         password: data.pwd,
         first_name: data.name.split(" ")[0],
         last_name: data.name.split(" ").slice(1).join(" "),
+        is_public_in_ranking: !!data.public,
+        cpf: data.cpf,
+        phone: data.phone,
+        city: data.city,
+        state: data.state,
+        cep: data.cep,
       });
       const { data: tokens } = await api.post("/auth/login/", {
         username: data.email,
@@ -91,15 +99,11 @@ export default function Signup() {
       const { data: me } = await api.get("/me/", {
         headers: { Authorization: `Bearer ${tokens.access}` },
       });
-      login({ asAdmin: !!me.is_admin_ong, user: me, accessToken: tokens.access });
-      navigate("/");
+      login({ user: me, accessToken: tokens.access, refreshToken: tokens.refresh });
+      navigate("/minha-conta", { replace: true });
     } catch (err) {
-      console.error(err);
-      alert(
-        err.response?.data?.email?.[0] ||
-          err.response?.data?.password?.[0] ||
-          "Falha ao criar conta."
-      );
+      setErro(mensagemDeErro(err, "Falha ao criar conta."));
+      setStep(1);
     }
   };
 
@@ -193,7 +197,7 @@ export default function Signup() {
                 <label className="label">Celular</label>
                 <input
                   className={"input mono" + (errors.phone ? " error" : "")}
-                  placeholder="(85) 9 0000-0000"
+                  placeholder="(81) 9 0000-0000"
                   autoComplete="tel"
                   {...register("phone")}
                 />
@@ -209,7 +213,7 @@ export default function Signup() {
                 <label className="label">Cidade</label>
                 <input
                   className={"input" + (errors.city ? " error" : "")}
-                  placeholder="Fortaleza"
+                  placeholder="Ipojuca"
                   autoComplete="address-level2"
                   {...register("city")}
                 />
@@ -234,7 +238,7 @@ export default function Signup() {
               <label className="label">CEP</label>
               <input
                 className={"input mono" + (errors.cep ? " error" : "")}
-                placeholder="60000-000"
+                placeholder="55590-000"
                 autoComplete="postal-code"
                 {...register("cep")}
               />
@@ -271,7 +275,8 @@ export default function Signup() {
               <label className="row gap-8" style={{ cursor: "pointer" }}>
                 <input type="checkbox" {...register("public")} />
                 <span style={{ fontSize: 13, color: "var(--ink-2)" }}>
-                  Aparecer publicamente no <strong className="strong">ranking de doadores</strong>
+                  Aparecer publicamente no <strong className="strong">ranking de doadores</strong> e
+                  na página de sócios
                 </span>
               </label>
               <label className="row gap-8" style={{ cursor: "pointer" }}>
@@ -286,6 +291,8 @@ export default function Signup() {
             </p>
           </>
         )}
+
+        {erro && <Notice tone="erro">{erro}</Notice>}
 
         <div className="row gap-12" style={{ marginTop: 16 }}>
           {step > 1 && (

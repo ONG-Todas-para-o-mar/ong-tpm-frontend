@@ -1,19 +1,26 @@
+import { Link } from "react-router-dom";
 import RankingTable from "../../components/RankingTable.jsx";
 import SEO from "../../components/SEO.jsx";
+import { useAuth } from "../../hooks/useAuth.jsx";
 
 export default function Ranking() {
+  const { isAuthed } = useAuth();
+
   return (
     <div className="fade-up" data-screen-label="Public — Ranking">
-      <SEO title="Ranking" description="Lista pública de doadores e empresas que mais contribuíram para a TPM." />
+      <SEO
+        title="Ranking"
+        description="Lista pública de doadores e empresas que mais contribuíram para a TPM."
+      />
       <section style={{ padding: "64px 0 32px", borderBottom: "1px solid var(--line)" }}>
         <div className="wrap">
           <span className="eyebrow">Ranking de doadores</span>
-          <h1 className="display" style={{ fontSize: "clamp(40px, 5vw, 72px)", margin: "18px 0 16px" }}>
+          <h1 className="display" style={{ fontSize: "clamp(34px, 5vw, 72px)", margin: "18px 0 16px" }}>
             Quem sustenta a maré.
           </h1>
           <p style={{ fontSize: 17, color: "var(--ink-2)", maxWidth: 620, margin: 0 }}>
-            Lista pública de pessoas e empresas que mais contribuíram para a TPM. A participação no
-            ranking é opcional — quem prefere doar anonimamente aparece com apelido.
+            Lista pública de pessoas e empresas que mais contribuíram para a TPM. A participação é
+            opcional — quem prefere doar anonimamente pode se retirar do ranking a qualquer momento.
           </p>
         </div>
       </section>
@@ -39,11 +46,14 @@ export default function Ranking() {
                 Reconhecimento, não competição.
               </h3>
               <p style={{ color: "var(--ink-2)", margin: 0, fontSize: 14, maxWidth: 600 }}>
-                Os tiers (Albatroz, Coral, Maré) são definidos pelo total doado em 12 meses. Você pode
-                optar por aparecer anonimamente — basta marcar essa opção no seu painel.
+                Os selos de sócio (Maré, Coral, Albatroz e os selos de recorrência) são definidos
+                pelo total doado e pelo tempo de contribuição. Você controla a exibição do seu nome
+                na sua própria conta.
               </p>
             </div>
-            <button className="btn btn-primary">Aparecer no ranking</button>
+            <Link to={isAuthed ? "/minha-conta" : "/cadastro"} className="btn btn-primary">
+              {isAuthed ? "Gerenciar minha conta" : "Aparecer no ranking"}
+            </Link>
           </div>
         </div>
       </section>

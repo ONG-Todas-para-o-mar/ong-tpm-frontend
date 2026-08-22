@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import Icon from "./Icon.jsx";
 import Mark from "./Mark.jsx";
 
 export default function Footer() {
@@ -19,41 +20,56 @@ export default function Footer() {
               Organização feminista e antirracista que democratiza o surf e empodera mulheres negras
               e seus filhos na Baía de Maracaípe, Litoral Sul de Pernambuco. Desde 2016.
             </p>
-            <div className="row gap-8" style={{ marginTop: 18 }}>
+            <div className="row gap-8" style={{ marginTop: 18, flexWrap: "wrap" }}>
               <span className="tag mono">CNPJ 32.418.902/0001-44</span>
+              <a
+                className="tag mono"
+                href="https://instagram.com/tpm.todasparaomar"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                <Icon name="instagram" size={12} /> @tpm.todasparaomar
+              </a>
             </div>
           </div>
+
           <div>
             <h4>Plataforma</h4>
             <Link to="/sobre">Sobre a ONG</Link>
             <Link to="/projetos">Projetos</Link>
             <Link to="/noticias">Notícias</Link>
             <Link to="/ranking">Ranking</Link>
+            <Link to="/socios">Selos de sócio</Link>
           </div>
+
           <div>
             <h4>Apoie</h4>
             <Link to="/doar">Como doar</Link>
             <Link to="/doar">Doação recorrente</Link>
             <Link to="/contato">Parcerias</Link>
             <Link to="/contato">Voluntariado</Link>
+            <Link to="/cadastro">Criar conta</Link>
           </div>
+
           <div>
             <h4>Transparência</h4>
-            <a>Relatórios anuais</a>
-            <a>Auditoria independente</a>
-            <a>Política de privacidade</a>
-            <a>Estatuto</a>
+            <Link to="/transparencia">Prestação de contas</Link>
+            <Link to="/noticias">Relatórios publicados</Link>
+            <Link to="/transparencia">Registros de impacto</Link>
+            <Link to="/contato">Falar com a diretoria</Link>
           </div>
         </div>
+
         <div className="foot-bot">
           <div>© 2026 TPM · Todas Para o Mar. Organização sem fins lucrativos.</div>
           <div className="row gap-16">
-            <span
+            <a
               className="mono"
+              href="mailto:hello@tpmar.org"
               style={{ fontSize: 11, letterSpacing: ".08em", textTransform: "uppercase" }}
             >
               hello@tpmar.org · +55 (81) 3000-0000
-            </span>
+            </a>
           </div>
         </div>
       </div>
