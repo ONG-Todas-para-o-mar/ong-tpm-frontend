@@ -8,6 +8,8 @@ import About from "./pages/public/About.jsx";
 import Projects from "./pages/public/Projects.jsx";
 import ProjectDetail from "./pages/public/ProjectDetail.jsx";
 import Blog from "./pages/public/Blog.jsx";
+import Media from "./pages/public/Media.jsx";
+import Feed from "./pages/public/Feed.jsx";
 import PostDetail from "./pages/public/PostDetail.jsx";
 import Donate from "./pages/public/Donate.jsx";
 import Contact from "./pages/public/Contact.jsx";
@@ -27,6 +29,7 @@ const Dashboard = lazy(() => import("./pages/admin/Dashboard.jsx"));
 const AdminRanking = lazy(() => import("./pages/admin/AdminRanking.jsx"));
 const AdminCampaigns = lazy(() => import("./pages/admin/AdminCampaigns.jsx"));
 const AdminNews = lazy(() => import("./pages/admin/AdminNews.jsx"));
+const AdminMedia = lazy(() => import("./pages/admin/AdminMedia.jsx"));
 const AdminDonations = lazy(() => import("./pages/admin/AdminDonations.jsx"));
 const AdminBadges = lazy(() => import("./pages/admin/AdminBadges.jsx"));
 const AdminMessages = lazy(() => import("./pages/admin/AdminMessages.jsx"));
@@ -70,6 +73,8 @@ export default function App() {
         <Route path="projetos/:id" element={<ProjectDetail />} />
         <Route path="noticias" element={<Blog />} />
         <Route path="noticias/:slug" element={<PostDetail />} />
+        <Route path="tpm-na-midia" element={<Media />} />
+        <Route path="fique-por-dentro" element={<Feed />} />
         <Route path="socios" element={<Socios />} />
         <Route path="doar" element={<Donate />} />
         <Route path="contato" element={<Contact />} />
@@ -95,6 +100,7 @@ export default function App() {
         <Route path="admin" element={admin(<Dashboard />)} />
         <Route path="admin/campanhas" element={admin(<AdminCampaigns />)} />
         <Route path="admin/noticias" element={admin(<AdminNews />)} />
+        <Route path="admin/midia" element={admin(<AdminMedia />)} />
         <Route path="admin/doacoes" element={admin(<AdminDonations />)} />
         <Route path="admin/selos" element={admin(<AdminBadges />)} />
         <Route path="admin/mensagens" element={admin(<AdminMessages />)} />

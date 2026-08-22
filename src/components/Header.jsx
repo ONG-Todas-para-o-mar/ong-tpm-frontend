@@ -10,8 +10,9 @@ const NAV_PUBLIC = [
   { to: "/sobre", label: "Sobre" },
   { to: "/projetos", label: "Projetos" },
   { to: "/noticias", label: "Notícias" },
+  { to: "/tpm-na-midia", label: "TPM na Mídia" },
+  { to: "/fique-por-dentro", label: "Fique por dentro" },
   { to: "/socios", label: "Sócios" },
-  { to: "/ranking", label: "Ranking" },
   { to: "/contato", label: "Contato" },
 ];
 
@@ -19,6 +20,7 @@ const NAV_ADMIN = [
   { to: "/admin", label: "Dashboard", end: true },
   { to: "/admin/campanhas", label: "Campanhas" },
   { to: "/admin/noticias", label: "Notícias" },
+  { to: "/admin/midia", label: "Mídia" },
   { to: "/admin/doacoes", label: "Doações" },
   { to: "/admin/selos", label: "Selos" },
   { to: "/admin/mensagens", label: "Mensagens" },

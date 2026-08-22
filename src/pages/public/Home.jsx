@@ -1,10 +1,15 @@
 import { Link, useNavigate } from "react-router-dom";
 import Icon from "../../components/Icon.jsx";
 import SEO from "../../components/SEO.jsx";
-import { PH, WaveLine, Progress, StatBlock, LoadingState } from "../../components/Shared.jsx";
+import { PH, WaveLine, StatBlock, LoadingState } from "../../components/Shared.jsx";
 import { imagemDe, REGIAO_PADRAO } from "../../data/fotos.js";
-import { BRL, NUM, dataBR } from "../../lib/format.js";
-import { useDashboardPublico, useMetas, useNoticias } from "../../hooks/useQueries.js";
+import { NUM, dataBR } from "../../lib/format.js";
+import {
+  useDashboardPublico,
+  useMetas,
+  useNoticias,
+  useVideos,
+} from "../../hooks/useQueries.js";
 import { useTheme } from "../../hooks/useTheme.jsx";
 
 export default function Home() {
@@ -13,30 +18,31 @@ export default function Home() {
   const { data: stats, isLoading: carregandoStats } = useDashboardPublico();
   const { data: metas, isLoading: carregandoMetas } = useMetas({ ativa: true });
   const { data: noticias } = useNoticias({ publicada: true });
+  const { data: videos } = useVideos();
 
   const destaques = (metas || []).slice(0, 3);
   const ultimas = (noticias || []).slice(0, 3);
 
   const numeros = [
     {
-      v: carregandoStats ? "…" : BRL(stats?.total_arrecadado || 0),
-      l: "Arrecadado",
-      s: "Doações confirmadas na plataforma",
+      v: carregandoStats ? "…" : NUM(stats?.campanhas_ativas || 0),
+      l: "Projetos ativos",
+      s: "Em andamento no Litoral Sul",
     },
     {
-      v: carregandoStats ? "…" : NUM(stats?.doadores_ativos || 0),
-      l: "Doadores ativos",
-      s: "Pessoas e empresas",
+      v: "2016",
+      l: "Atuando desde",
+      s: "Na Baía de Maracaípe",
     },
     {
       v: carregandoStats ? "…" : NUM(stats?.socios || 0),
-      l: "Sócios com selo",
-      s: "Contribuição recorrente",
+      l: "Sócios",
+      s: "Rede de apoio permanente",
     },
     {
-      v: carregandoStats ? "…" : NUM(stats?.campanhas_ativas || 0),
-      l: "Campanhas ativas",
-      s: "Com meta e prazo definidos",
+      v: NUM((videos || []).length),
+      l: "Aparições na mídia",
+      s: "Reportagens e documentários",
     },
   ];
 
@@ -196,27 +202,22 @@ export default function Home() {
                     {m.descricao}
                   </p>
 
-                  <div style={{ marginTop: 22 }}>
-                    <Progress
-                      value={Number(m.valor_atual || 0)}
-                      max={Number(m.valor_alvo || 0) || 1}
-                      label={`Progresso de ${m.titulo}`}
-                    />
-                    <div
-                      className="row mono"
-                      style={{
-                        justifyContent: "space-between",
-                        marginTop: 8,
-                        fontSize: 11,
-                        color: "var(--ink-3)",
-                      }}
-                    >
-                      <span>{BRL(m.valor_atual)} arrecadados</span>
-                      <span>
-                        {Number(m.valor_alvo) > 0 ? `meta ${BRL(m.valor_alvo)}` : "meta aberta"}
-                      </span>
-                    </div>
-                  </div>
+                  <Link
+                    to={`/projetos/${m.id}`}
+                    className="mono"
+                    style={{
+                      marginTop: 22,
+                      fontSize: 11,
+                      color: "var(--red)",
+                      letterSpacing: ".08em",
+                      textTransform: "uppercase",
+                      display: "inline-flex",
+                      gap: 6,
+                      alignItems: "center",
+                    }}
+                  >
+                    Conhecer o projeto <Icon name="arrow" size={13} />
+                  </Link>
                 </div>
               </article>
             ))}
@@ -283,8 +284,8 @@ export default function Home() {
                   Cada doação tem rastro.
                 </h3>
                 <p style={{ color: "var(--ink-2)", margin: "0 0 24px", maxWidth: 460 }}>
-                  Publicamos a alocação de cada real recebido e os registros de impacto de cada
-                  projeto. Doadores acompanham a própria contribuição pelo painel.
+                  Publicamos o destino de cada recurso recebido e os registros de impacto de cada
+                  projeto. Quem apoia acompanha a própria contribuição pelo painel.
                 </p>
                 <div className="row gap-12" style={{ flexWrap: "wrap" }}>
                   <button className="btn btn-dark" onClick={() => navigate("/transparencia")}>
@@ -299,31 +300,51 @@ export default function Home() {
                 style={{
                   padding: "44px 48px",
                   display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: 32,
+                  gap: 28,
+                  alignContent: "center",
                   background: "var(--bg)",
                 }}
               >
-                <StatBlock
-                  value={carregandoStats ? "…" : NUM(stats?.doacoes_confirmadas || 0)}
-                  label="Doações confirmadas"
-                  sub="Registradas e conciliadas"
-                />
-                <StatBlock
-                  value={carregandoStats ? "…" : BRL(stats?.ticket_medio || 0)}
-                  label="Ticket médio"
-                  sub="Por doação confirmada"
-                />
-                <StatBlock
-                  value={carregandoStats ? "…" : NUM(stats?.projetos_total || 0)}
-                  label="Projetos cadastrados"
-                  sub="Ativos e arquivados"
-                />
-                <StatBlock
-                  value={carregandoStats ? "…" : NUM(stats?.noticias_publicadas || 0)}
-                  label="Publicações"
-                  sub="Relatórios e bastidores"
-                />
+                {[
+                  {
+                    t: "Relatórios periódicos",
+                    d: "Publicados na aba de Notícias, na categoria Transparência.",
+                  },
+                  {
+                    t: "Registro de impacto por projeto",
+                    d: "Cada campanha lista o que já foi entregue, com número e unidade.",
+                  },
+                  {
+                    t: "Contas abertas",
+                    d: "A destinação por projeto fica na página de prestação de contas.",
+                  },
+                ].map((item) => (
+                  <div key={item.t} className="row gap-12" style={{ alignItems: "flex-start" }}>
+                    <div
+                      style={{
+                        width: 22,
+                        height: 22,
+                        borderRadius: 999,
+                        border: "1px solid var(--red)",
+                        color: "var(--red)",
+                        display: "grid",
+                        placeItems: "center",
+                        flexShrink: 0,
+                        marginTop: 2,
+                      }}
+                    >
+                      <Icon name="check" size={13} />
+                    </div>
+                    <div>
+                      <strong style={{ fontSize: 15, display: "block", marginBottom: 4 }}>
+                        {item.t}
+                      </strong>
+                      <span style={{ fontSize: 14, color: "var(--ink-3)", lineHeight: 1.5 }}>
+                        {item.d}
+                      </span>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

@@ -8,7 +8,7 @@ Interface web da plataforma da ONG **Todas Para o Mar (TPM)** — organização 
 
 Este repositório contém o **frontend** da plataforma digital da TPM, em React com Vite. A aplicação oferece:
 
-- **Área pública** — apresentação da ONG, vitrine de projetos com página de detalhe, painel de notícias, prestação de contas, ranking de doadores, página de selos de sócio e registro de doação
+- **Área pública** — apresentação da ONG, vitrine de projetos com página de detalhe, painel de notícias, **TPM na Mídia**, **Fique por dentro**, prestação de contas, ranking de doadores, página de selos de sócio e registro de doação
 - **Área de autenticação** — cadastro, login, recuperação e redefinição de senha
 - **Painel do doador** — histórico de doações, selos conquistados, posição no ranking, privacidade e dados cadastrais
 - **Painel administrativo** — dashboard com métricas reais, campanhas, notícias, doações, selos, mensagens e ranking
@@ -57,6 +57,7 @@ src/
 ├── pages/
 │   ├── public/
 │   │   ├── Home.jsx           ├── ProjectDetail.jsx   ├── Socios.jsx
+│   │   ├── Media.jsx          ├── Feed.jsx            ├── Transparency.jsx
 │   │   ├── About.jsx          ├── Blog.jsx            ├── Transparency.jsx
 │   │   ├── Projects.jsx       ├── PostDetail.jsx      ├── NotFound.jsx
 │   │   ├── Donate.jsx         ├── Contact.jsx         └── Ranking.jsx
@@ -155,6 +156,8 @@ Autenticação baseada em **JWT (Bearer Token)**:
 | `/projetos/:id` | Detalhe do projeto, impacto e notícias ligadas | Público |
 | `/noticias` | Painel de notícias | Público |
 | `/noticias/:slug` | Matéria completa | Público |
+| `/tpm-na-midia` | Reportagens em vídeo, com filtro por veículo | Público |
+| `/fique-por-dentro` | Últimos posts do Instagram da ONG | Público |
 | `/socios` | Selos de sócio e quem os conquistou | Público |
 | `/transparencia` | Prestação de contas e registros de impacto | Público |
 | `/ranking` | Ranking de doadores | Público |
@@ -166,6 +169,7 @@ Autenticação baseada em **JWT (Bearer Token)**:
 | `/admin` | Dashboard administrativo | 🔑 Admin |
 | `/admin/campanhas` | Campanhas + registros de impacto | 🔑 Admin |
 | `/admin/noticias` | Notícias (rascunho, publicar, destaque) | 🔑 Admin |
+| `/admin/midia` | Vídeos do YouTube e posts do Instagram | 🔑 Admin |
 | `/admin/doacoes` | Conciliação de doações + CSV | 🔑 Admin |
 | `/admin/selos` | Selos de sócio e atribuição manual | 🔑 Admin |
 | `/admin/mensagens` | Caixa de entrada do contato | 🔑 Admin |

@@ -109,6 +109,70 @@ export const useDeleteNoticia = () => {
   });
 };
 
+/* ── TPM na Mídia (vídeos) ────────────────────────────────────────── */
+
+export const useVideos = (params) =>
+  useQuery({
+    queryKey: ["videos", params || null],
+    queryFn: () => api.get(`/videos/${qs(params)}`).then(lista),
+  });
+
+export const useCreateVideo = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (payload) => api.post("/videos/", payload).then((r) => r.data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["videos"] }),
+  });
+};
+
+export const useUpdateVideo = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, payload }) => api.patch(`/videos/${id}/`, payload).then((r) => r.data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["videos"] }),
+  });
+};
+
+export const useDeleteVideo = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => api.delete(`/videos/${id}/`).then((r) => r.data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["videos"] }),
+  });
+};
+
+/* ── Fique por dentro (Instagram) ─────────────────────────────────── */
+
+export const usePostsInstagram = (params) =>
+  useQuery({
+    queryKey: ["instagram", params || null],
+    queryFn: () => api.get(`/instagram/${qs(params)}`).then(lista),
+  });
+
+export const useCreatePostInstagram = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (payload) => api.post("/instagram/", payload).then((r) => r.data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["instagram"] }),
+  });
+};
+
+export const useUpdatePostInstagram = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, payload }) => api.patch(`/instagram/${id}/`, payload).then((r) => r.data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["instagram"] }),
+  });
+};
+
+export const useDeletePostInstagram = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => api.delete(`/instagram/${id}/`).then((r) => r.data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["instagram"] }),
+  });
+};
+
 /* ── Selos de sócio ───────────────────────────────────────────────── */
 
 export const useBadges = () =>

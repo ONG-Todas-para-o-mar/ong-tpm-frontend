@@ -38,8 +38,10 @@ export default function Footer() {
             <Link to="/sobre">Sobre a ONG</Link>
             <Link to="/projetos">Projetos</Link>
             <Link to="/noticias">Notícias</Link>
-            <Link to="/ranking">Ranking</Link>
+            <Link to="/tpm-na-midia">TPM na Mídia</Link>
+            <Link to="/fique-por-dentro">Fique por dentro</Link>
             <Link to="/socios">Selos de sócio</Link>
+            <Link to="/ranking">Ranking de doadores</Link>
           </div>
 
           <div>

@@ -464,10 +464,17 @@ button { font: inherit; color: inherit; }
    Responsive (mobile-first overrides)
    ───────────────────────────────────────────────────────────────────────── */
 
+/* O menu horizontal com 8 abas precisa de ~1070px. Abaixo disso vira hamburguer. */
+@media (max-width: 1120px) {
+  .nav { display: none; }
+  .nav-toggle { display: inline-flex; }
+  .nav-mobile { display: block; }
+  .hdr-inner > .hdr-cta { display: none; }
+}
+
 @media (max-width: 960px) {
   .wrap, .wrap-narrow { padding: 0 20px; }
   .hdr-inner { height: 60px; gap: 16px; }
-  .nav { display: none; }
   .foot-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
   .foot-bot { flex-direction: column; align-items: flex-start; gap: 12px; }
 
@@ -520,6 +527,54 @@ button { font: inherit; color: inherit; }
   .auth-side img { width: 56px !important; height: 56px !important; margin-bottom: 20px !important; }
 }
 
+/* TPM na Midia — cartao de video com capa e play */
+.video-card { display: flex; flex-direction: column; }
+.video-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--bg-2);
+  overflow: hidden;
+}
+.video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.video-capa {
+  position: absolute; inset: 0;
+  padding: 0; border: 0; cursor: pointer;
+  background: var(--bg-2);
+  display: block; width: 100%; height: 100%;
+}
+.video-capa img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform .3s, filter .3s;
+}
+.video-capa:hover img { transform: scale(1.03); filter: brightness(.85); }
+.video-play {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px; height: 60px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--red); color: white;
+  box-shadow: 0 4px 20px rgba(0,0,0,.3);
+  transition: transform .2s;
+}
+.video-capa:hover .video-play { transform: translate(-50%, -50%) scale(1.08); }
+
+/* Fique por dentro — embed do Instagram */
+.post-instagram { margin: 0; }
+.post-instagram iframe {
+  width: 100%;
+  height: 560px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--bg-1);
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .post-instagram iframe { height: 500px; }
+  .video-play { width: 48px; height: 48px; }
+}
+
 /* Linha de projeto na vitrine */
 .projeto-linha {
   display: grid;
@@ -540,9 +595,6 @@ button { font: inherit; color: inherit; }
 }
 
 @media (max-width: 960px) {
-  .nav-toggle { display: inline-flex; }
-  .nav-mobile { display: block; }
-  .hdr-inner > .hdr-cta { display: none; }
   .g2, .g3, .split { grid-template-columns: 1fr; }
   .split { gap: 32px; }
   .admin-wrap { padding: 24px 20px 56px !important; }
