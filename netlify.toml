@@ -1,0 +1,51 @@
+# Netlify — conectar o repositorio e publicar. Sem cartao, sem servidor.
+#
+# IMPORTANTE: troque a URL do backend em [[redirects]] pela do seu servico
+# antes do primeiro deploy, ou defina a variavel API_URL no painel da Netlify
+# e use o valor dela aqui.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# O front chama /api/... e a Netlify repassa para o backend. Como a chamada
+# sai do mesmo dominio, nao existe CORS nem preflight — e o VITE_API_URL
+# continua sendo "/api", igual ao arranjo de servidor unico.
+[[redirects]]
+  from = "/api/*"
+  to = "https://SEU-BACKEND.onrender.com/api/:splat"
+  status = 200
+  force = true
+
+# Django admin. Nao pode ser /admin/: esse caminho e do painel em React.
+[[redirects]]
+  from = "/dj-admin/*"
+  to = "https://SEU-BACKEND.onrender.com/dj-admin/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/static/*"
+  to = "https://SEU-BACKEND.onrender.com/static/:splat"
+  status = 200
+  force = true
+
+# Rotas do React Router
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

@@ -214,8 +214,13 @@ para qualquer caminho — os dois arquivos de configuração já vêm prontos:
 
 | Arquivo | Host |
 |---|---|
-| `public/_redirects` | Netlify · Cloudflare Pages |
+| `netlify.toml` | **Netlify** — build, proxy de `/api` para o backend e fallback do SPA |
+| `public/_redirects` | Cloudflare Pages |
 | `vercel.json` | Vercel (rewrites + cache longo em `/assets`) |
+
+Na Netlify o `/api/*` é repassado para o backend pelo próprio host, então o navegador só
+conversa com o domínio do site — **sem CORS** e com `VITE_API_URL=/api`. Antes do primeiro
+deploy, troque `https://SEU-BACKEND.onrender.com` no `netlify.toml` pela URL real da API.
 
 ### Mesmo domínio que a API (arranjo em produção)
 
