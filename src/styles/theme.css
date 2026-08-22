@@ -149,11 +149,12 @@ button { font: inherit; color: inherit; }
 }
 .hdr-inner {
   display: flex; align-items: center; justify-content: space-between;
-  height: 68px; gap: 32px;
+  height: 68px; gap: 20px;
 }
 .brand {
   display: flex; align-items: center; gap: 14px;
   cursor: pointer;
+  flex-shrink: 0;
 }
 .brand-mark {
   width: 48px; height: 48px;
@@ -162,13 +163,15 @@ button { font: inherit; color: inherit; }
 }
 .brand-mark img { width: 100%; height: 100%; }
 [data-dark="true"] .brand-mark img { filter: brightness(1.1); }
-.brand-name { font-family: var(--f-display); font-weight: 600; font-size: 16px; letter-spacing: -0.01em; line-height: 1; }
+.brand-name { font-family: var(--f-display); font-weight: 600; font-size: 16px; letter-spacing: -0.01em; line-height: 1; white-space: nowrap; }
 .brand-tag { font-family: var(--f-mono); font-size: 10px; color: var(--ink-3); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; }
 .nav {
-  display: flex; align-items: center; gap: 4px;
+  display: flex; align-items: center; gap: 2px;
+  flex-shrink: 0;
 }
 .nav-link {
-  padding: 8px 14px;
+  padding: 8px 12px;
+  white-space: nowrap;
   border-radius: var(--r-sm);
   font-size: 14px;
   font-weight: 500;
@@ -184,7 +187,7 @@ button { font: inherit; color: inherit; }
   content: ""; position: absolute; left: 14px; right: 14px; bottom: -19px;
   border-bottom: 2px solid var(--red);
 }
-.hdr-cta { display: flex; align-items: center; gap: 8px; }
+.hdr-cta { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
 /* ─────────────────────────────────────────────────────────────────────────
    Buttons
@@ -464,7 +467,13 @@ button { font: inherit; color: inherit; }
    Responsive (mobile-first overrides)
    ───────────────────────────────────────────────────────────────────────── */
 
-/* O menu horizontal com 8 abas precisa de ~1070px. Abaixo disso vira hamburguer. */
+/* Cabecalho: com 8 abas, marca + menu + acoes medem 1205px sem quebrar linha.
+   Entre 1121 e 1320 o nome ao lado do logo sai para o menu caber (sobra o simbolo,
+   que continua clicavel). Abaixo de 1121 vira hamburguer. */
+@media (min-width: 1121px) and (max-width: 1320px) {
+  .brand-text { display: none; }
+}
+
 @media (max-width: 1120px) {
   .nav { display: none; }
   .nav-toggle { display: inline-flex; }
