@@ -7,4 +7,15 @@ export default defineConfig({
     port: 5173,
     open: true,
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ["react", "react-dom", "react-router-dom"],
+          data: ["@tanstack/react-query", "axios"],
+          forms: ["react-hook-form", "@hookform/resolvers", "zod"],
+        },
+      },
+    },
+  },
 });
