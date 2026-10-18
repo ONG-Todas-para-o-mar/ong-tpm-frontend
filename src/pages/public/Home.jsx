@@ -4,6 +4,7 @@ import SEO from "../../components/SEO.jsx";
 import { PH, WaveLine, StatBlock, LoadingState } from "../../components/Shared.jsx";
 import { imagemDe, REGIAO_PADRAO } from "../../data/fotos.js";
 import { NUM, dataBR } from "../../lib/format.js";
+import { secaoVisivel } from "../../lib/secoes.js";
 import {
   useDashboardPublico,
   useMetas,
@@ -28,6 +29,7 @@ export default function Home() {
       v: carregandoStats ? "…" : NUM(stats?.campanhas_ativas || 0),
       l: "Projetos ativos",
       s: "Em andamento no Litoral Sul",
+      secao: "projetos",
     },
     {
       v: "2016",
@@ -38,13 +40,14 @@ export default function Home() {
       v: carregandoStats ? "…" : NUM(stats?.socios || 0),
       l: "Sócios",
       s: "Rede de apoio permanente",
+      secao: "socios",
     },
     {
       v: NUM((videos || []).length),
       l: "Aparições na mídia",
       s: "Reportagens e documentários",
     },
-  ];
+  ].filter((n) => !n.secao || secaoVisivel(n.secao));
 
   return (
     <div data-screen-label="Public — Home" className="fade-up">
@@ -146,84 +149,86 @@ export default function Home() {
         </div>
       </section>
 
-      <section style={{ padding: "72px 0" }}>
-        <div className="wrap">
-          <div
-            className="row"
-            style={{
-              justifyContent: "space-between",
-              alignItems: "end",
-              marginBottom: 32,
-              flexWrap: "wrap",
-              gap: 16,
-            }}
-          >
-            <div>
-              <span className="eyebrow">Em destaque</span>
-              <h2 className="display" style={{ fontSize: "clamp(26px, 3vw, 44px)", margin: "10px 0 0" }}>
-                Projetos ativos
-              </h2>
+      {secaoVisivel("projetos") && (
+        <section style={{ padding: "72px 0" }}>
+          <div className="wrap">
+            <div
+              className="row"
+              style={{
+                justifyContent: "space-between",
+                alignItems: "end",
+                marginBottom: 32,
+                flexWrap: "wrap",
+                gap: 16,
+              }}
+            >
+              <div>
+                <span className="eyebrow">Em destaque</span>
+                <h2 className="display" style={{ fontSize: "clamp(26px, 3vw, 44px)", margin: "10px 0 0" }}>
+                  Projetos ativos
+                </h2>
+              </div>
+              <button className="btn btn-ghost" onClick={() => navigate("/projetos")}>
+                Ver todos <Icon name="arrow" size={15} />
+              </button>
             </div>
-            <button className="btn btn-ghost" onClick={() => navigate("/projetos")}>
-              Ver todos <Icon name="arrow" size={15} />
-            </button>
-          </div>
 
-          {carregandoMetas && <LoadingState label="Carregando projetos…" />}
+            {carregandoMetas && <LoadingState label="Carregando projetos…" />}
 
-          {!carregandoMetas && destaques.length === 0 && (
-            <p style={{ color: "var(--ink-3)" }}>Nenhuma campanha ativa no momento.</p>
-          )}
+            {!carregandoMetas && destaques.length === 0 && (
+              <p style={{ color: "var(--ink-3)" }}>Nenhuma campanha ativa no momento.</p>
+            )}
 
-          <div className="g3">
-            {destaques.map((m) => (
-              <article
-                key={m.id}
-                className="card"
-                style={{ display: "flex", flexDirection: "column" }}
-              >
-                <Link to={`/projetos/${m.id}`}>
-                  <PH
-                    label={m.titulo}
-                    src={imagemDe(m)}
-                    ratio="16/10"
-                    style={{ borderRadius: 0, border: 0 }}
-                  />
-                </Link>
-                <div style={{ padding: 22, flex: 1, display: "flex", flexDirection: "column" }}>
-                  <div className="row gap-8" style={{ marginBottom: 10, flexWrap: "wrap" }}>
-                    <span className="tag mono">{m.regiao || REGIAO_PADRAO}</span>
-                    {m.categoria?.nome && <span className="tag">{m.categoria.nome}</span>}
-                  </div>
-                  <h3 className="display" style={{ fontSize: 22, margin: "6px 0 8px" }}>
-                    <Link to={`/projetos/${m.id}`}>{m.titulo}</Link>
-                  </h3>
-                  <p style={{ color: "var(--ink-3)", fontSize: 14, margin: 0, lineHeight: 1.5, flex: 1 }}>
-                    {m.descricao}
-                  </p>
-
-                  <Link
-                    to={`/projetos/${m.id}`}
-                    className="mono"
-                    style={{
-                      marginTop: 22,
-                      fontSize: 11,
-                      color: "var(--red)",
-                      letterSpacing: ".08em",
-                      textTransform: "uppercase",
-                      display: "inline-flex",
-                      gap: 6,
-                      alignItems: "center",
-                    }}
-                  >
-                    Conhecer o projeto <Icon name="arrow" size={13} />
+            <div className="g3">
+              {destaques.map((m) => (
+                <article
+                  key={m.id}
+                  className="card"
+                  style={{ display: "flex", flexDirection: "column" }}
+                >
+                  <Link to={`/projetos/${m.id}`}>
+                    <PH
+                      label={m.titulo}
+                      src={imagemDe(m)}
+                      ratio="16/10"
+                      style={{ borderRadius: 0, border: 0 }}
+                    />
                   </Link>
-                </div>
-              </article>
-            ))}
+                  <div style={{ padding: 22, flex: 1, display: "flex", flexDirection: "column" }}>
+                    <div className="row gap-8" style={{ marginBottom: 10, flexWrap: "wrap" }}>
+                      <span className="tag mono">{m.regiao || REGIAO_PADRAO}</span>
+                      {m.categoria?.nome && <span className="tag">{m.categoria.nome}</span>}
+                    </div>
+                    <h3 className="display" style={{ fontSize: 22, margin: "6px 0 8px" }}>
+                      <Link to={`/projetos/${m.id}`}>{m.titulo}</Link>
+                    </h3>
+                    <p style={{ color: "var(--ink-3)", fontSize: 14, margin: 0, lineHeight: 1.5, flex: 1 }}>
+                      {m.descricao}
+                    </p>
+
+                    <Link
+                      to={`/projetos/${m.id}`}
+                      className="mono"
+                      style={{
+                        marginTop: 22,
+                        fontSize: 11,
+                        color: "var(--red)",
+                        letterSpacing: ".08em",
+                        textTransform: "uppercase",
+                        display: "inline-flex",
+                        gap: 6,
+                        alignItems: "center",
+                      }}
+                    >
+                      Conhecer o projeto <Icon name="arrow" size={13} />
+                    </Link>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {ultimas.length > 0 && (
         <section style={{ padding: "16px 0 72px" }}>
@@ -274,82 +279,86 @@ export default function Home() {
         </section>
       )}
 
-      <section style={{ padding: "16px 0 96px" }}>
-        <div className="wrap">
-          <div className="card" style={{ padding: 0, overflow: "hidden" }}>
-            <div className="split-narrow" style={{ gap: 0, minHeight: 280 }}>
-              <div style={{ padding: "44px 48px", borderRight: "1px solid var(--line)" }}>
-                <span className="eyebrow">Transparência ativa</span>
-                <h3 className="display" style={{ fontSize: 30, margin: "14px 0 16px" }}>
-                  Cada doação tem rastro.
-                </h3>
-                <p style={{ color: "var(--ink-2)", margin: "0 0 24px", maxWidth: 460 }}>
-                  Publicamos o destino de cada recurso recebido e os registros de impacto de cada
-                  projeto. Quem apoia acompanha a própria contribuição pelo painel.
-                </p>
-                <div className="row gap-12" style={{ flexWrap: "wrap" }}>
-                  <button className="btn btn-dark" onClick={() => navigate("/transparencia")}>
-                    <Icon name="file" size={15} /> Prestação de contas
-                  </button>
-                  <button className="btn btn-ghost" onClick={() => navigate("/socios")}>
-                    Selos de sócio <Icon name="arrow" size={14} />
-                  </button>
-                </div>
-              </div>
-              <div
-                style={{
-                  padding: "44px 48px",
-                  display: "grid",
-                  gap: 28,
-                  alignContent: "center",
-                  background: "var(--bg)",
-                }}
-              >
-                {[
-                  {
-                    t: "Relatórios periódicos",
-                    d: "Publicados na aba de Notícias, na categoria Transparência.",
-                  },
-                  {
-                    t: "Registro de impacto por projeto",
-                    d: "Cada campanha lista o que já foi entregue, com número e unidade.",
-                  },
-                  {
-                    t: "Contas abertas",
-                    d: "A destinação por projeto fica na página de prestação de contas.",
-                  },
-                ].map((item) => (
-                  <div key={item.t} className="row gap-12" style={{ alignItems: "flex-start" }}>
-                    <div
-                      style={{
-                        width: 22,
-                        height: 22,
-                        borderRadius: 999,
-                        border: "1px solid var(--red)",
-                        color: "var(--red)",
-                        display: "grid",
-                        placeItems: "center",
-                        flexShrink: 0,
-                        marginTop: 2,
-                      }}
-                    >
-                      <Icon name="check" size={13} />
-                    </div>
-                    <div>
-                      <strong style={{ fontSize: 15, display: "block", marginBottom: 4 }}>
-                        {item.t}
-                      </strong>
-                      <span style={{ fontSize: 14, color: "var(--ink-3)", lineHeight: 1.5 }}>
-                        {item.d}
-                      </span>
-                    </div>
+      {secaoVisivel("transparencia") && (
+        <section style={{ padding: "16px 0 96px" }}>
+          <div className="wrap">
+            <div className="card" style={{ padding: 0, overflow: "hidden" }}>
+              <div className="split-narrow" style={{ gap: 0, minHeight: 280 }}>
+                <div style={{ padding: "44px 48px", borderRight: "1px solid var(--line)" }}>
+                  <span className="eyebrow">Transparência ativa</span>
+                  <h3 className="display" style={{ fontSize: 30, margin: "14px 0 16px" }}>
+                    Cada doação tem rastro.
+                  </h3>
+                  <p style={{ color: "var(--ink-2)", margin: "0 0 24px", maxWidth: 460 }}>
+                    Publicamos o destino de cada recurso recebido e os registros de impacto de cada
+                    projeto. Quem apoia acompanha a própria contribuição pelo painel.
+                  </p>
+                  <div className="row gap-12" style={{ flexWrap: "wrap" }}>
+                    <button className="btn btn-dark" onClick={() => navigate("/transparencia")}>
+                      <Icon name="file" size={15} /> Prestação de contas
+                    </button>
+                    {secaoVisivel("socios") && (
+                      <button className="btn btn-ghost" onClick={() => navigate("/socios")}>
+                        Selos de sócio <Icon name="arrow" size={14} />
+                      </button>
+                    )}
                   </div>
-                ))}
+                </div>
+                <div
+                  style={{
+                    padding: "44px 48px",
+                    display: "grid",
+                    gap: 28,
+                    alignContent: "center",
+                    background: "var(--bg)",
+                  }}
+                >
+                  {[
+                    {
+                      t: "Relatórios periódicos",
+                      d: "Publicados na aba de Notícias, na categoria Transparência.",
+                    },
+                    {
+                      t: "Registro de impacto por projeto",
+                      d: "Cada campanha lista o que já foi entregue, com número e unidade.",
+                    },
+                    {
+                      t: "Contas abertas",
+                      d: "A destinação por projeto fica na página de prestação de contas.",
+                    },
+                  ].map((item) => (
+                    <div key={item.t} className="row gap-12" style={{ alignItems: "flex-start" }}>
+                      <div
+                        style={{
+                          width: 22,
+                          height: 22,
+                          borderRadius: 999,
+                          border: "1px solid var(--red)",
+                          color: "var(--red)",
+                          display: "grid",
+                          placeItems: "center",
+                          flexShrink: 0,
+                          marginTop: 2,
+                        }}
+                      >
+                        <Icon name="check" size={13} />
+                      </div>
+                      <div>
+                        <strong style={{ fontSize: 15, display: "block", marginBottom: 4 }}>
+                          {item.t}
+                        </strong>
+                        <span style={{ fontSize: 14, color: "var(--ink-3)", lineHeight: 1.5 }}>
+                          {item.d}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }

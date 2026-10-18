@@ -4,17 +4,18 @@ import Icon from "./Icon.jsx";
 import Mark from "./Mark.jsx";
 import { useAuth } from "../hooks/useAuth.jsx";
 import { useTheme } from "../hooks/useTheme.jsx";
+import { secaoVisivel } from "../lib/secoes.js";
 
 const NAV_PUBLIC = [
   { to: "/", label: "Início", end: true },
   { to: "/sobre", label: "Sobre" },
-  { to: "/projetos", label: "Projetos" },
+  { to: "/projetos", label: "Projetos", secao: "projetos" },
   { to: "/noticias", label: "Notícias" },
   { to: "/tpm-na-midia", label: "TPM na Mídia" },
   { to: "/fique-por-dentro", label: "Fique por dentro" },
-  { to: "/socios", label: "Sócios" },
+  { to: "/socios", label: "Sócios", secao: "socios" },
   { to: "/contato", label: "Contato" },
-];
+].filter((it) => !it.secao || secaoVisivel(it.secao));
 
 const NAV_ADMIN = [
   { to: "/admin", label: "Dashboard", end: true },

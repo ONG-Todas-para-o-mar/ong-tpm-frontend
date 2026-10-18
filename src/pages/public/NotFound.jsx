@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import Icon from "../../components/Icon.jsx";
 import SEO from "../../components/SEO.jsx";
 import { WaveLine } from "../../components/Shared.jsx";
+import { secaoVisivel } from "../../lib/secoes.js";
 
 export default function NotFound() {
   const location = useLocation();
@@ -29,9 +30,11 @@ export default function NotFound() {
             <Link to="/" className="btn btn-primary">
               <Icon name="arrowLeft" size={15} /> Voltar ao início
             </Link>
-            <Link to="/projetos" className="btn btn-secondary">
-              Ver projetos
-            </Link>
+            {secaoVisivel("projetos") && (
+              <Link to="/projetos" className="btn btn-secondary">
+                Ver projetos
+              </Link>
+            )}
             <Link to="/doar" className="btn btn-ghost">
               Fazer uma doação <Icon name="arrow" size={14} />
             </Link>

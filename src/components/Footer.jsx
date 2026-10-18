@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import Icon from "./Icon.jsx";
 import Mark from "./Mark.jsx";
+import { secaoVisivel } from "../lib/secoes.js";
 
 export default function Footer() {
   return (
@@ -36,11 +37,11 @@ export default function Footer() {
           <div>
             <h4>Plataforma</h4>
             <Link to="/sobre">Sobre a ONG</Link>
-            <Link to="/projetos">Projetos</Link>
+            {secaoVisivel("projetos") && <Link to="/projetos">Projetos</Link>}
             <Link to="/noticias">Notícias</Link>
             <Link to="/tpm-na-midia">TPM na Mídia</Link>
             <Link to="/fique-por-dentro">Fique por dentro</Link>
-            <Link to="/socios">Selos de sócio</Link>
+            {secaoVisivel("socios") && <Link to="/socios">Selos de sócio</Link>}
             <Link to="/ranking">Ranking de doadores</Link>
           </div>
 
@@ -53,13 +54,15 @@ export default function Footer() {
             <Link to="/cadastro">Criar conta</Link>
           </div>
 
-          <div>
-            <h4>Transparência</h4>
-            <Link to="/transparencia">Prestação de contas</Link>
-            <Link to="/noticias">Relatórios publicados</Link>
-            <Link to="/transparencia">Registros de impacto</Link>
-            <Link to="/contato">Falar com a diretoria</Link>
-          </div>
+          {secaoVisivel("transparencia") && (
+            <div>
+              <h4>Transparência</h4>
+              <Link to="/transparencia">Prestação de contas</Link>
+              <Link to="/noticias">Relatórios publicados</Link>
+              <Link to="/transparencia">Registros de impacto</Link>
+              <Link to="/contato">Falar com a diretoria</Link>
+            </div>
+          )}
         </div>
 
         <div className="foot-bot">
