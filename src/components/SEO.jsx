@@ -2,7 +2,7 @@ import { Helmet } from "react-helmet-async";
 
 const SITE = "TPM · Todas Para o Mar";
 const DEFAULT_DESC =
-  "Plataforma de doação direta para projetos de empoderamento feminino e preservação marinha no litoral brasileiro.";
+  "ONG feminista e antirracista que democratiza o surf e promove transformação social com mulheres negras e seus filhos na Baía de Maracaípe, Ipojuca · PE.";
 
 export default function SEO({ title, description = DEFAULT_DESC, image }) {
   const fullTitle = title ? `${title} — ${SITE}` : SITE;

@@ -35,9 +35,15 @@ export default function NotFound() {
                 Ver projetos
               </Link>
             )}
-            <Link to="/doar" className="btn btn-ghost">
-              Fazer uma doação <Icon name="arrow" size={14} />
-            </Link>
+            {secaoVisivel("doacao") ? (
+              <Link to="/doar" className="btn btn-ghost">
+                Fazer uma doação <Icon name="arrow" size={14} />
+              </Link>
+            ) : (
+              <Link to="/contato" className="btn btn-ghost">
+                Fale com a gente <Icon name="arrow" size={14} />
+              </Link>
+            )}
           </div>
         </div>
       </section>

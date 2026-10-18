@@ -9,6 +9,11 @@ import {
 } from "../../components/Shared.jsx";
 import { dataBR } from "../../lib/format.js";
 import { useVideos } from "../../hooks/useQueries.js";
+import { IMPRENSA } from "../../data/imprensa.js";
+
+// "2022-08-26" -> "26/08/2022" sem passar por Date: new Date() leria meia-noite
+// UTC e, no horário de Brasília, a matéria apareceria com a data do dia anterior.
+const dataDaMateria = (iso) => iso.split("-").reverse().join("/");
 
 // O iframe do YouTube só entra depois do clique: seis players carregados de uma
 // vez deixam a página lenta e já plantam cookies antes de a pessoa pedir vídeo.
@@ -170,6 +175,41 @@ export default function Media() {
           )}
         </div>
       </section>
+
+      {IMPRENSA.length > 0 && (
+        <section style={{ padding: "0 0 96px" }}>
+          <div className="wrap">
+            <span className="eyebrow">Na imprensa</span>
+            <h2 className="display" style={{ fontSize: "clamp(24px, 2.6vw, 36px)", margin: "10px 0 24px" }}>
+              Matérias e reportagens
+            </h2>
+            <div style={{ borderTop: "1px solid var(--line)" }}>
+              {IMPRENSA.map((m) => (
+                <a
+                  key={m.url}
+                  href={m.url}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  style={{ display: "block", padding: "22px 0", borderBottom: "1px solid var(--line)" }}
+                >
+                  <div className="row gap-8" style={{ marginBottom: 8, flexWrap: "wrap" }}>
+                    <span className="tag tag-red">{m.veiculo}</span>
+                    <span className="mono muted" style={{ fontSize: 12 }}>
+                      {dataDaMateria(m.data)}
+                    </span>
+                  </div>
+                  <h3 className="display" style={{ fontSize: 20, margin: "0 0 6px", lineHeight: 1.3 }}>
+                    {m.titulo} <Icon name="arrow" size={15} />
+                  </h3>
+                  <p style={{ color: "var(--ink-3)", fontSize: 14, margin: 0, lineHeight: 1.55, maxWidth: 760 }}>
+                    {m.resumo}
+                  </p>
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

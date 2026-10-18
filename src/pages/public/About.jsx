@@ -1,6 +1,40 @@
 import { PH } from "../../components/Shared.jsx";
 import SEO from "../../components/SEO.jsx";
 import { FOTO_SOBRE } from "../../data/fotos.js";
+import { secaoVisivel } from "../../lib/secoes.js";
+
+const PILAR_TRANSPARENCIA = {
+  n: "03",
+  t: "Transparência ativa",
+  d: "Relatórios trimestrais auditados, extratos públicos e rastreabilidade de cada doação até a aplicação final.",
+};
+
+const PILAR_CULTURA = {
+  n: "03",
+  t: "Cultura e convivência",
+  d: "Cineclube TPM – Tela, Pipoca e Mar e encontros de cinema, memória e celebração na comunidade.",
+};
+
+// Atividades e marcos conferidos em reportagens (Terra, Marco Zero, Waves, Lupa do
+// Bem, Continente, Alma Preta, Brasil de Fato), no Diário Oficial e na Receita Federal.
+const ATIVIDADES = [
+  { t: "Inclua Surf TPM", d: "Aulas gratuitas de surfe aos sábados para crianças e adolescentes de 7 a 17 anos da comunidade." },
+  { t: "Surf Day", d: "Encontro mensal com aulas de surfe para mulheres, ioga e rodas de conversa." },
+  { t: "Maraca Surf Festival", d: "Campeonato de surfe feminino que dá visibilidade às mulheres e às surfistas negras desde 2016." },
+  { t: "Educação", d: "Reforço escolar, idiomas, alfabetização e letramento racial." },
+  { t: "Cultura", d: "Capoeira, maracatu, teatro, dança e o Cineclube TPM – Tela, Pipoca e Mar." },
+  { t: "Inclua Mulheres", d: "Geração de renda para as mulheres da comunidade com artesanato e pesca." },
+];
+
+const LINHA_DO_TEMPO = [
+  { y: "2016", t: "Idealização por Nuala Costa", d: "A ex-surfista profissional inicia as ações na Baía de Maracaípe; em agosto acontece o 1º Maraca Surf Festival, de surfe feminino." },
+  { y: "2021", t: "5º TPM Surf Festival", d: "Três dias de campeonato, rodas de conversa, oficinas e música na praia de Maracaípe, no encerramento do mês da Consciência Negra." },
+  { y: "2022", t: "Associação formalizada", d: "Registro da Associação de Mulheres TPM – Todas Para o Mar, presidida por Nuala Costa." },
+  { y: "2024", t: "Prêmio Periferia Viva", d: "A TPM é selecionada pelo Ministério das Cidades na categoria Cultura e Identidade Periférica." },
+  { y: "2025", t: "Na ONU", d: "Nuala Costa fala sobre racismo no surfe na consulta regional da ONU sobre racismo no esporte, na Cidade do México." },
+  { y: "2025", t: "Plataforma digital", d: "Doações diretas e dashboard público de prestação de contas.", secao: "doacao" },
+  { y: "2026", t: "Selos de sócio e ranking", d: "Reconhecimento público de doadores recorrentes e empresas parceiras.", secao: "socios" },
+];
 
 export default function About() {
   return (
@@ -27,6 +61,10 @@ export default function About() {
               adolescentes e mulheres da comunidade.
             </p>
             <p style={{ fontSize: 16, color: "var(--ink-2)", marginTop: 16, lineHeight: 1.65 }}>
+              Nuala foi a primeira mulher — e a primeira mulher negra — a representar Pernambuco em
+              competições de surfe, e hoje coordena a TPM.
+            </p>
+            <p style={{ fontSize: 16, color: "var(--ink-2)", marginTop: 16, lineHeight: 1.65 }}>
               Atuamos na <strong style={{ color: "var(--ink)" }}>democratização do surf</strong>, no
               empreendedorismo e na promoção do bem-viver — com foco no empoderamento de
               <strong style={{ color: "var(--ink)" }}> mulheres negras e seus filhos</strong>, e em
@@ -34,6 +72,25 @@ export default function About() {
             </p>
           </div>
           <PH label="foto — equipe & beneficiárias" src={FOTO_SOBRE} ratio="4/3" />
+        </div>
+      </section>
+
+      <section style={{ padding: "56px 0 72px", borderTop: "1px solid var(--line)" }}>
+        <div className="wrap">
+          <span className="eyebrow">O que fazemos</span>
+          <h2 className="display" style={{ fontSize: "clamp(26px, 3vw, 44px)", margin: "10px 0 32px" }}>
+            Do mar para a comunidade.
+          </h2>
+          <div className="g3">
+            {ATIVIDADES.map((a) => (
+              <article key={a.t} className="card" style={{ padding: 26 }}>
+                <h3 className="display" style={{ fontSize: 20, margin: "0 0 8px" }}>
+                  {a.t}
+                </h3>
+                <p style={{ color: "var(--ink-3)", fontSize: 14, margin: 0, lineHeight: 1.55 }}>{a.d}</p>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -56,7 +113,7 @@ export default function About() {
               {[
                 { n: "01", t: "Democratização do surf", d: "Acesso gratuito ao surf para crianças e adolescentes da comunidade da Baía de Maracaípe, com pranchas, aulas e acompanhamento contínuo." },
                 { n: "02", t: "Empoderamento feminino e antirracismo", d: "Formação profissional, empreendedorismo e apoio psicossocial para mulheres negras chefes de família." },
-                { n: "03", t: "Transparência ativa", d: "Relatórios trimestrais auditados, extratos públicos e rastreabilidade de cada doação até a aplicação final." },
+                secaoVisivel("transparencia") ? PILAR_TRANSPARENCIA : PILAR_CULTURA,
               ].map((p) => (
                 <div key={p.n} style={{ background: "var(--bg-1)", padding: "36px 28px" }}>
                   <div className="mono" style={{ fontSize: 12, color: "var(--red)", letterSpacing: ".1em" }}>
@@ -74,16 +131,9 @@ export default function About() {
           <div style={{ marginTop: 80 }}>
             <span className="eyebrow">Linha do tempo</span>
             <div style={{ marginTop: 32, display: "grid", gap: 0 }}>
-              {[
-                { y: "2016", t: "Idealização por Nuala Costa", d: "Ex-surfista profissional inicia ações socioeducativas na Baía de Maracaípe." },
-                { y: "2018", t: "Primeiras turmas de surf", d: "Aulas gratuitas para crianças e adolescentes da comunidade local." },
-                { y: "2021", t: "Consolidação como ONG", d: "Estatuto registrado e formalização da atuação feminista e antirracista." },
-                { y: "2023", t: "Expansão para empreendedorismo", d: "Programas de geração de renda para mulheres negras chefes de família." },
-                { y: "2025", t: "Plataforma digital", d: "Doações diretas e dashboard público de prestação de contas." },
-                { y: "2026", t: "Selos de sócio e ranking", d: "Reconhecimento público de doadores recorrentes e empresas parceiras." },
-              ].map((e, i, arr) => (
+              {LINHA_DO_TEMPO.filter((e) => !e.secao || secaoVisivel(e.secao)).map((e, i, arr) => (
                 <div
-                  key={e.y}
+                  key={e.y + e.t}
                   style={{
                     display: "grid",
                     gridTemplateColumns: "120px 1fr",

@@ -51,6 +51,17 @@ export default function Header() {
     navigate("/");
   };
 
+  // Sem doação no ar, o botão de destaque leva às formas de participar.
+  const chamada = secaoVisivel("doacao") ? (
+    <button className="btn btn-primary btn-sm" onClick={() => navigate("/doar")}>
+      Doar agora
+    </button>
+  ) : (
+    <button className="btn btn-primary btn-sm" onClick={() => navigate("/contato")}>
+      Participe
+    </button>
+  );
+
   const acoes = (
     <>
       <button
@@ -70,18 +81,14 @@ export default function Header() {
           <button className="btn btn-ghost btn-sm" onClick={() => navigate("/minha-conta")}>
             <Icon name="user" size={15} /> Minha conta
           </button>
-          <button className="btn btn-primary btn-sm" onClick={() => navigate("/doar")}>
-            Doar agora
-          </button>
+          {chamada}
         </>
       ) : (
         <>
           <button className="btn btn-ghost btn-sm" onClick={() => navigate("/login")}>
             Entrar
           </button>
-          <button className="btn btn-primary btn-sm" onClick={() => navigate("/doar")}>
-            Doar agora
-          </button>
+          {chamada}
         </>
       )}
     </>

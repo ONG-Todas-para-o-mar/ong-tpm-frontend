@@ -8,7 +8,26 @@ import AuthFrame from "../../components/AuthFrame.jsx";
 import { Notice, Spinner } from "../../components/Shared.jsx";
 import SEO from "../../components/SEO.jsx";
 import { api, mensagemDeErro } from "../../lib/api.js";
+import { secaoVisivel } from "../../lib/secoes.js";
 import { useAuth } from "../../hooks/useAuth.jsx";
+
+// Com a doação fora do ar, quem entra é a equipe que cuida do site.
+const LADO = secaoVisivel("doacao")
+  ? {
+      titulo: ["Acompanhe o impacto de cada", "doação no seu painel pessoal."],
+      itens: [
+        ["Histórico completo", "Cada doação rastreada até o projeto."],
+        ["Selos de sócio", "Conquistados por valor doado e por recorrência."],
+        ["Sua posição no ranking", "Reconhecimento público opcional."],
+      ],
+    }
+  : {
+      titulo: ["Área da equipe", "Todas Para o Mar."],
+      itens: [
+        ["Notícias e mídia", "Publique notícias, vídeos do YouTube e posts do Instagram."],
+        ["Mensagens", "Veja os contatos que chegam pelo formulário do site."],
+      ],
+    };
 
 const schema = z.object({
   email: z.string().email("E-mail inválido"),
@@ -70,9 +89,9 @@ export default function Login() {
               }}
             />
             <h2 className="display" style={{ fontSize: 34, lineHeight: 1.15, margin: 0 }}>
-              Acompanhe o impacto de cada
+              {LADO.titulo[0]}
               <br />
-              doação no seu painel pessoal.
+              {LADO.titulo[1]}
             </h2>
             <div
               style={{
@@ -83,11 +102,7 @@ export default function Login() {
                 fontSize: 14,
               }}
             >
-              {[
-                ["Histórico completo", "Cada doação rastreada até o projeto."],
-                ["Selos de sócio", "Conquistados por valor doado e por recorrência."],
-                ["Sua posição no ranking", "Reconhecimento público opcional."],
-              ].map(([t, d]) => (
+              {LADO.itens.map(([t, d]) => (
                 <div key={t} className="row gap-12">
                   <div
                     style={{

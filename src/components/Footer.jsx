@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import Icon from "./Icon.jsx";
 import Mark from "./Mark.jsx";
 import { secaoVisivel } from "../lib/secoes.js";
+import { CONTATO, PARTICIPE } from "../data/contato.js";
+
+const externo = { target: "_blank", rel: "noreferrer noopener" };
 
 export default function Footer() {
   return (
@@ -22,14 +25,9 @@ export default function Footer() {
               e seus filhos na Baía de Maracaípe, Litoral Sul de Pernambuco. Desde 2016.
             </p>
             <div className="row gap-8" style={{ marginTop: 18, flexWrap: "wrap" }}>
-              <span className="tag mono">CNPJ 32.418.902/0001-44</span>
-              <a
-                className="tag mono"
-                href="https://instagram.com/tpm.todasparaomar"
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                <Icon name="instagram" size={12} /> @tpm.todasparaomar
+              <span className="tag mono">CNPJ {CONTATO.cnpj}</span>
+              <a className="tag mono" href={CONTATO.instagram.url} {...externo}>
+                <Icon name="instagram" size={12} /> @{CONTATO.instagram.usuario}
               </a>
             </div>
           </div>
@@ -42,16 +40,23 @@ export default function Footer() {
             <Link to="/tpm-na-midia">TPM na Mídia</Link>
             <Link to="/fique-por-dentro">Fique por dentro</Link>
             {secaoVisivel("socios") && <Link to="/socios">Selos de sócio</Link>}
-            <Link to="/ranking">Ranking de doadores</Link>
+            {secaoVisivel("doacao") && <Link to="/ranking">Ranking de doadores</Link>}
           </div>
 
           <div>
-            <h4>Apoie</h4>
-            <Link to="/doar">Como doar</Link>
-            <Link to="/doar">Doação recorrente</Link>
+            <h4>Participe</h4>
+            {PARTICIPE.map((p) => (
+              <a key={p.id} href={p.url} {...externo}>
+                {p.titulo}
+              </a>
+            ))}
             <Link to="/contato">Parcerias</Link>
-            <Link to="/contato">Voluntariado</Link>
-            <Link to="/cadastro">Criar conta</Link>
+            {secaoVisivel("doacao") && (
+              <>
+                <Link to="/doar">Como doar</Link>
+                <Link to="/cadastro">Criar conta</Link>
+              </>
+            )}
           </div>
 
           {secaoVisivel("transparencia") && (
@@ -70,10 +75,18 @@ export default function Footer() {
           <div className="row gap-16">
             <a
               className="mono"
-              href="mailto:hello@tpmar.org"
+              href={`mailto:${CONTATO.email}`}
               style={{ fontSize: 11, letterSpacing: ".08em", textTransform: "uppercase" }}
             >
-              hello@tpmar.org · +55 (81) 3000-0000
+              {CONTATO.email}
+            </a>
+            <a
+              className="mono"
+              href={CONTATO.whatsapp.url}
+              {...externo}
+              style={{ fontSize: 11, letterSpacing: ".08em", textTransform: "uppercase" }}
+            >
+              WhatsApp {CONTATO.whatsapp.numero}
             </a>
           </div>
         </div>

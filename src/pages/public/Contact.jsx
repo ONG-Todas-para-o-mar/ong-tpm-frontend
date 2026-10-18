@@ -4,17 +4,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Icon from "../../components/Icon.jsx";
 import SEO from "../../components/SEO.jsx";
-import { PH, Notice, Spinner } from "../../components/Shared.jsx";
+import { Notice, Spinner } from "../../components/Shared.jsx";
 import { mensagemDeErro } from "../../lib/api.js";
+import { secaoVisivel } from "../../lib/secoes.js";
+import { CONTATO, PARTICIPE } from "../../data/contato.js";
 import { useEnviarMensagem } from "../../hooks/useQueries.js";
 
 const ASSUNTOS = [
   { id: "voluntariado", label: "Quero ser voluntário(a)" },
   { id: "parceria", label: "Parceria institucional" },
   { id: "imprensa", label: "Imprensa" },
-  { id: "doacoes", label: "Dúvidas sobre doações" },
+  { id: "doacoes", label: "Dúvidas sobre doações", secao: "doacao" },
   { id: "outro", label: "Outro" },
-];
+].filter((a) => !a.secao || secaoVisivel(a.secao));
+
+const externo = { target: "_blank", rel: "noreferrer noopener" };
 
 const schema = z.object({
   nome: z.string().min(2, "Informe seu nome"),
@@ -178,50 +182,71 @@ export default function Contact() {
                 Maracaípe · Pernambuco
               </h3>
               <div style={{ color: "var(--ink-2)", fontSize: 14, lineHeight: 1.6 }}>
-                Baía de Maracaípe — Porto de Galinhas
+                {CONTATO.endereco}
                 <br />
-                Ipojuca · PE · 55590-000
+                {CONTATO.cidade}
               </div>
               <hr className="divider" style={{ margin: "20px 0" }} />
               <div className="col gap-12">
-                <a className="row gap-12" href="mailto:hello@tpmar.org">
-                  <Icon name="mail" size={16} />
-                  <span className="mono" style={{ fontSize: 13 }}>
-                    hello@tpmar.org
-                  </span>
-                </a>
-                <div className="row gap-12">
+                <a className="row gap-12" href={CONTATO.whatsapp.url} {...externo}>
                   <Icon name="phone" size={16} />
                   <span className="mono" style={{ fontSize: 13 }}>
-                    +55 (81) 3000-0000
+                    {CONTATO.whatsapp.numero} · WhatsApp ({CONTATO.whatsapp.responsavel})
                   </span>
-                </div>
-                <a
-                  className="row gap-12"
-                  href="https://instagram.com/tpm.todasparaomar"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
+                </a>
+                <a className="row gap-12" href={`mailto:${CONTATO.email}`}>
+                  <Icon name="mail" size={16} />
+                  <span className="mono" style={{ fontSize: 13 }}>
+                    {CONTATO.email}
+                  </span>
+                </a>
+                <a className="row gap-12" href={CONTATO.instagram.url} {...externo}>
                   <Icon name="instagram" size={16} />
                   <span className="mono" style={{ fontSize: 13 }}>
-                    @tpm.todasparaomar
+                    @{CONTATO.instagram.usuario}
+                  </span>
+                </a>
+                <a className="row gap-12" href={CONTATO.mapa} {...externo}>
+                  <Icon name="pin" size={16} />
+                  <span className="mono" style={{ fontSize: 13 }}>
+                    Ver no mapa
                   </span>
                 </a>
               </div>
             </div>
 
-            <div className="card" style={{ padding: 0, overflow: "hidden" }}>
-              <PH label="mapa — Baía de Maracaípe, Ipojuca · PE" ratio="16/9" style={{ borderRadius: 0 }} />
+            <div className="card" style={{ padding: 28 }}>
+              <span className="eyebrow">Participe</span>
+              <div className="col gap-16" style={{ marginTop: 14 }}>
+                {PARTICIPE.map((p) => (
+                  <div key={p.id}>
+                    <strong style={{ fontSize: 15, display: "block", marginBottom: 4 }}>
+                      {p.titulo}
+                    </strong>
+                    <p style={{ color: "var(--ink-3)", fontSize: 13, margin: "0 0 6px", lineHeight: 1.55 }}>
+                      {p.texto}
+                    </p>
+                    <a
+                      href={p.url}
+                      {...externo}
+                      className="mono"
+                      style={{ fontSize: 11, color: "var(--red)", letterSpacing: ".08em", textTransform: "uppercase" }}
+                    >
+                      {p.acao} →
+                    </a>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="card" style={{ padding: 28 }}>
               <div className="row gap-12" style={{ marginBottom: 8 }}>
                 <Icon name="users" size={16} />
-                <strong style={{ fontSize: 14 }}>Parcerias corporativas</strong>
+                <strong style={{ fontSize: 14 }}>Parcerias</strong>
               </div>
               <p style={{ color: "var(--ink-3)", fontSize: 13, margin: 0, lineHeight: 1.55 }}>
-                Empresas com matching de doações ou patrocínio direto de projetos falam com o time de
-                relações institucionais. Parceiras recebem o selo institucional na página de sócios.
+                Empresas, coletivos e instituições que queiram somar com as atividades da TPM podem
+                escrever pelo formulário (assunto “Parceria institucional”) ou chamar no WhatsApp.
               </p>
             </div>
           </aside>

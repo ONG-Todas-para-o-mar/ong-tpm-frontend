@@ -5,6 +5,8 @@ import { PH, WaveLine, StatBlock, LoadingState } from "../../components/Shared.j
 import { imagemDe, REGIAO_PADRAO } from "../../data/fotos.js";
 import { NUM, dataBR } from "../../lib/format.js";
 import { secaoVisivel } from "../../lib/secoes.js";
+import { CONTATO, PARTICIPE } from "../../data/contato.js";
+import { IMPRENSA } from "../../data/imprensa.js";
 import {
   useDashboardPublico,
   useMetas,
@@ -12,6 +14,8 @@ import {
   useVideos,
 } from "../../hooks/useQueries.js";
 import { useTheme } from "../../hooks/useTheme.jsx";
+
+const externo = { target: "_blank", rel: "noreferrer noopener" };
 
 export default function Home() {
   const navigate = useNavigate();
@@ -23,6 +27,8 @@ export default function Home() {
 
   const destaques = (metas || []).slice(0, 3);
   const ultimas = (noticias || []).slice(0, 3);
+  const naMidia = (videos || []).slice(0, 3);
+  const comDoacao = secaoVisivel("doacao");
 
   const numeros = [
     {
@@ -42,10 +48,21 @@ export default function Home() {
       s: "Rede de apoio permanente",
       secao: "socios",
     },
+    // Números publicados pela imprensa (Terra 2023, Folha de Pernambuco out/2024).
     {
-      v: NUM((videos || []).length),
+      v: "80+",
+      l: "Crianças e adolescentes",
+      s: "De 7 a 17 anos, em 2024",
+    },
+    {
+      v: "120",
+      l: "Mulheres",
+      s: "Atendidas pela TPM em 2024",
+    },
+    {
+      v: NUM((videos || []).length + IMPRENSA.length),
       l: "Aparições na mídia",
-      s: "Reportagens e documentários",
+      s: "Reportagens, vídeos e entrevistas",
     },
   ].filter((n) => !n.secao || secaoVisivel(n.secao));
 
@@ -90,11 +107,17 @@ export default function Home() {
                 socioeducativas.
               </p>
               <div className="row gap-12" style={{ marginTop: 36, flexWrap: "wrap" }}>
-                <button className="btn btn-primary btn-lg" onClick={() => navigate("/doar")}>
-                  <Icon name="heart" size={16} /> Fazer uma doação
-                </button>
+                {comDoacao ? (
+                  <button className="btn btn-primary btn-lg" onClick={() => navigate("/doar")}>
+                    <Icon name="heart" size={16} /> Fazer uma doação
+                  </button>
+                ) : (
+                  <button className="btn btn-primary btn-lg" onClick={() => navigate("/contato")}>
+                    <Icon name="wave" size={16} /> Participe
+                  </button>
+                )}
                 <button className="btn btn-secondary btn-lg" onClick={() => navigate("/sobre")}>
-                  Como funciona
+                  Conheça a TPM
                 </button>
               </div>
             </div>
@@ -141,13 +164,92 @@ export default function Home() {
               }}
             >
               Transformar a realidade social de mulheres negras e seus filhos por meio da
-              democratização do surf e de práticas socioeducativas e culturais — garantindo que{" "}
-              <span style={{ color: "var(--red)" }}>cada real doado</span> seja rastreável até o
-              projeto que financia.
+              democratização do surf e de práticas socioeducativas e culturais
+              {comDoacao ? (
+                <>
+                  {" "}
+                  — garantindo que <span style={{ color: "var(--red)" }}>cada real doado</span> seja
+                  rastreável até o projeto que financia.
+                </>
+              ) : (
+                <>
+                  {" "}
+                  no <span style={{ color: "var(--red)" }}>litoral sul de Pernambuco</span>.
+                </>
+              )}
             </p>
           </div>
         </div>
       </section>
+
+      <section style={{ padding: "72px 0", borderBottom: "1px solid var(--line)" }}>
+        <div className="wrap">
+          <span className="eyebrow">Participe</span>
+          <h2 className="display" style={{ fontSize: "clamp(26px, 3vw, 44px)", margin: "10px 0 32px" }}>
+            Vem pro mar com a gente.
+          </h2>
+          <div className="g3">
+            {PARTICIPE.map((p) => (
+              <article key={p.id} className="card" style={{ padding: 28, display: "flex", flexDirection: "column" }}>
+                <div style={{ color: "var(--red)", marginBottom: 14 }}>
+                  <Icon name={p.icone} size={22} />
+                </div>
+                <h3 className="display" style={{ fontSize: 22, margin: "0 0 8px" }}>
+                  {p.titulo}
+                </h3>
+                <p style={{ color: "var(--ink-3)", fontSize: 14, margin: "0 0 22px", lineHeight: 1.55, flex: 1 }}>
+                  {p.texto}
+                </p>
+                <a href={p.url} {...externo} className="btn btn-secondary" style={{ alignSelf: "flex-start" }}>
+                  {p.acao} <Icon name="arrow" size={14} />
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {naMidia.length > 0 && (
+        <section style={{ padding: "72px 0", borderBottom: "1px solid var(--line)" }}>
+          <div className="wrap">
+            <div
+              className="row"
+              style={{
+                justifyContent: "space-between",
+                alignItems: "end",
+                marginBottom: 32,
+                flexWrap: "wrap",
+                gap: 16,
+              }}
+            >
+              <div>
+                <span className="eyebrow">TPM na Mídia</span>
+                <h2 className="display" style={{ fontSize: "clamp(26px, 3vw, 44px)", margin: "10px 0 0" }}>
+                  O que contaram sobre a gente
+                </h2>
+              </div>
+              <button className="btn btn-ghost" onClick={() => navigate("/tpm-na-midia")}>
+                Ver tudo <Icon name="arrow" size={15} />
+              </button>
+            </div>
+            <div className="g3">
+              {naMidia.map((v) => (
+                <article key={v.id}>
+                  <Link to="/tpm-na-midia">
+                    <PH label={v.titulo} src={v.thumbnail} ratio="16/9" />
+                  </Link>
+                  <div className="row gap-8" style={{ marginTop: 16, flexWrap: "wrap" }}>
+                    {v.veiculo && <span className="tag tag-red">{v.veiculo}</span>}
+                  </div>
+                  <h3 className="display" style={{ fontSize: 18, margin: "10px 0 0", lineHeight: 1.3 }}>
+                    <Link to="/tpm-na-midia">{v.titulo}</Link>
+                  </h3>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {secaoVisivel("projetos") && (
         <section style={{ padding: "72px 0" }}>
@@ -278,6 +380,40 @@ export default function Home() {
           </div>
         </section>
       )}
+
+      <section style={{ padding: "16px 0 96px" }}>
+        <div className="wrap">
+          <div
+            className="card"
+            style={{
+              padding: "40px 44px",
+              display: "flex",
+              gap: 24,
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+            }}
+          >
+            <div>
+              <span className="eyebrow">Fique por dentro</span>
+              <h3 className="display" style={{ fontSize: 28, margin: "12px 0 8px" }}>
+                O dia a dia da TPM está no Instagram.
+              </h3>
+              <p style={{ color: "var(--ink-2)", margin: 0, maxWidth: 520 }}>
+                Aulas, encontros, cineclube e a rotina na Baía de Maracaípe.
+              </p>
+            </div>
+            <div className="row gap-12" style={{ flexWrap: "wrap" }}>
+              <a href={CONTATO.instagram.url} {...externo} className="btn btn-primary">
+                <Icon name="instagram" size={15} /> @{CONTATO.instagram.usuario}
+              </a>
+              <button className="btn btn-ghost" onClick={() => navigate("/fique-por-dentro")}>
+                Ver no site <Icon name="arrow" size={14} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {secaoVisivel("transparencia") && (
         <section style={{ padding: "16px 0 96px" }}>

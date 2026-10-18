@@ -104,7 +104,7 @@ cp .env.example .env
 | Variável | Descrição | Padrão |
 |---|---|---|
 | `VITE_API_URL` | URL base da API backend | `http://localhost:8000/api` |
-| `VITE_SECOES_OCULTAS` | Seções do site público que saem do menu, do rodapé e da página inicial, separadas por vírgula: `projetos`, `socios`, `transparencia`. As rotas continuam respondendo | vazio (tudo aparece) |
+| `VITE_SECOES_OCULTAS` | Seções do site público que saem do menu, do rodapé e da página inicial, separadas por vírgula: `projetos`, `socios`, `transparencia`, `doacao`. Com `doacao`, os botões de doar viram “Participe” (inscrições, voluntariado e aulas de surf, em `src/data/contato.js`). As rotas continuam respondendo | vazio (tudo aparece) |
 
 ### Rodando o servidor de desenvolvimento
 

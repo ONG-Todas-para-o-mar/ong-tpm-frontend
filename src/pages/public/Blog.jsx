@@ -10,16 +10,19 @@ import {
 } from "../../components/Shared.jsx";
 import { imagemDe } from "../../data/fotos.js";
 import { dataBR } from "../../lib/format.js";
+import { secaoVisivel } from "../../lib/secoes.js";
 import { useNoticias } from "../../hooks/useQueries.js";
+
+const COM_TRANSPARENCIA = secaoVisivel("transparencia");
 
 const CATEGORIAS = [
   { id: "", label: "Todas" },
-  { id: "transparencia", label: "Transparência" },
+  { id: "transparencia", label: "Transparência", secao: "transparencia" },
   { id: "projeto", label: "Projeto" },
   { id: "formacao", label: "Formação" },
   { id: "parceria", label: "Parceria" },
   { id: "evento", label: "Evento" },
-];
+].filter((c) => !c.secao || secaoVisivel(c.secao));
 
 export default function Blog() {
   const [categoria, setCategoria] = useState("");
@@ -40,9 +43,9 @@ export default function Blog() {
       />
       <section style={{ padding: "64px 0 32px", borderBottom: "1px solid var(--line)" }}>
         <div className="wrap">
-          <span className="eyebrow">Notícias e transparência</span>
+          <span className="eyebrow">{COM_TRANSPARENCIA ? "Notícias e transparência" : "Notícias"}</span>
           <h1 className="display" style={{ fontSize: "clamp(34px, 5vw, 72px)", margin: "18px 0 0" }}>
-            Atualizações, relatórios e bastidores.
+            {COM_TRANSPARENCIA ? "Atualizações, relatórios e bastidores." : "Atualizações e bastidores."}
           </h1>
         </div>
       </section>
